@@ -14,7 +14,6 @@ permission for www-data (easy, make sure they are `-rw-r--r`).
 ```sh
 git clone https://github.com/ninsuo/webcam.git
 cd webcam
-rm -r .git
 php -r "readfile('https://getcomposer.org/installer');" | php
 php composer.phar install
 php app/console doctrine:schema:create
