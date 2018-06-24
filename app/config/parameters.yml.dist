@@ -1,0 +1,91 @@
+# This file is a "template" of what your parameters.yml file should look like
+parameters:
+
+    # General
+    site_brand: app.site.brand
+    site_description: app.site.description
+    site_title: app.site.title
+    site_keywords: app.site.keywords
+    site_author: app.site.author
+
+    # Database (just put pdo_sqlite to switch)
+    database_driver:   pdo_mysql
+    database_host:     127.0.0.1
+    database_port:     ~
+    database_name:     fuz
+    database_user:     root
+    database_password: ~
+    database_path:     '%kernel.root_dir%/data.db3'
+
+    # Emails
+    mailer_transport:    smtp
+    mailer_encryption:   ssl
+    mailer_host:         127.0.0.1
+    mailer_port:         465
+    mailer_user:         ~
+    mailer_password:     ~
+    mailer_sender_email: auto@fuz.org
+    mailer_sender_name:  fuz.org
+
+    # Choose flag names in: src/BaseBundle/Resources/public/img/countries
+    # Implement translations in: src/AppBundle/translations/messages.XX.xlf
+    # /!\ Do not forget to add your new locales in config.yml, below jms_i18n_routing
+    locale: en
+    supported_locales:
+        en: {flag: United-Kingdom, menu: English}
+        fr: {flag: France, menu: Français}
+
+    # A secret key that's used to generate certain security-related tokens
+    secret:            ThisTokenIsNotSoSecretChangeIt
+
+    # GitHub Login: https://github.com/settings/developers
+    github_enabled: true
+    github_client_id: <your client id>
+    github_secret:    <your secret>
+
+    # StackExchange Login: https://stackapps.com/apps/oauth/
+    stack_enabled: true
+    stack_client_id: <your client id>
+    stack_secret:    <your secret>
+    stack_key:       <your key>
+
+    # Google Login: https://console.developers.google.com/project
+    google_enabled: true
+    google_client_id: <your client id>
+    google_secret:    <your secret>
+
+    # Twitter Login: https://apps.twitter.com/
+    twitter_enabled: true
+    twitter_client_id: <your client id>
+    twitter_secret:    <your secret>
+
+    # Facebook Login: https://developers.facebook.com/apps/
+    facebook_enabled: true
+    facebook_client_id: <your client id>
+    facebook_secret:    <your secret>
+
+    # Website menus at the top
+    menu_left_enabled: true
+    menu_right_enabled: true
+
+    # Members can remove their account (use {{ path('unsubscribe') }})
+    accounts_removable: true
+
+    # Members can edit their account
+    accounts_updatable: true
+
+    # Recaptcha
+    recaptcha_public: <your recaptcha site key>
+    recaptcha_private: <your recaptcha secret>
+
+    # User can only join if he has an email that matches the following regex (ex: '!@example\.org$!')
+    user_email_restriction: ~
+
+    # User are automatically enabled (true) / an admin need to manually enable them after registration (false)
+    user_auto_enabled: true
+
+    # Admin can edit user information (true) / User information are updated from provider at login
+    user_info_auto_update: true
+
+    # Misc
+    role_file_upload: ROLE_ADMIN

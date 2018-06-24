@@ -1,0 +1,34 @@
+admin:
+    groups:
+        id: ID
+        name: Nom
+        notes: Notes
+        create: Créer un nouveau groupe
+        created: Groupe créé avec succès
+        group: groupe
+        actions: Actions
+        delete: Supprimer
+        delete_confirm: Voulez-vous vraiment supprimer le groupe "%group%" ?
+        deleted: 'Groupe #%id% supprimé avec succès.'
+        manage: Utilisateurs dans ce groupe
+    groups_manage:
+        users: Utilisateurs
+        title: 'Utilisateurs du groupe %name%'
+        users_in: "Utilisateurs de %name% :"
+        users_out: "Autres utilisateurs :"
+    users:
+        id: ID
+        network: Réseau
+        nickname: Nom
+        contact: Email
+        enabled: Activé
+        admin: Admin
+        actions: Actions
+        manage: Groupes de cet utilisateur
+    users_manage:
+        groups: Groupes
+        title: Groupes de l'utilisateur %name%
+        groups_in: 'Groupes de %name% :'
+        groups_out: "Autres groupes :"
+    settings:
+        title: Paramètres de l'application

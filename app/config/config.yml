@@ -1,0 +1,163 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+
+framework:
+    translator:      { fallback: '%locale%' }
+    secret:          "%secret%"
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: ~
+    form:            ~
+    csrf_protection: ~
+    validation:      { enable_annotations: true }
+    templating:
+        engines: ['twig']
+    assets:
+        version: 1.0.0
+    default_locale:  "%locale%"
+    trusted_hosts:   ~
+    session:
+        handler_id:  ~
+    fragments:       ~
+    http_method_override: true
+
+# Twig Configuration
+twig:
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+    form_themes:
+        - "BaseBundle::theme.html.twig"
+        - "BraincraftedBootstrapBundle:Form:bootstrap.html.twig"
+    globals:
+        fuz:
+            menu_left: "%menu_left_enabled%"
+            menu_right: "%menu_right_enabled%"
+            services:
+                GitHub: "%github_enabled%"
+                Stack Exchange: "%stack_enabled%"
+                Google: "%google_enabled%"
+                Twitter: "%twitter_enabled%"
+                Facebook: "%facebook_enabled%"
+            site:
+                brand: "%site_brand%"
+                title: "%site_title%"
+                description: "%site_description%"
+                keywords: "%site_keywords%"
+                author: "%site_author%"
+            supported_locales: "%supported_locales%"
+            user:
+                allow_update: "%accounts_updatable%"
+                allow_remove: "%accounts_removable%"
+
+# Assetic Configuration
+assetic:
+    debug:          "%kernel.debug%"
+    use_controller: false
+    bundles:
+        - BaseBundle
+        - AppBundle
+    filters:
+       cssrewrite: ~
+       lessphp:
+            file: "%kernel.root_dir%/../vendor/oyejorge/less.php/lessc.inc.php"
+            apply_to: '.less$'
+       jsqueeze: ~
+       scssphp:
+            formatter: 'Leafo\ScssPhp\Formatter\Compressed'
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver:   "%database_driver%"
+        host:     "%database_host%"
+        port:     "%database_port%"
+        dbname:   "%database_name%"
+        user:     "%database_user%"
+        password: "%database_password%"
+        path:     "%database_path%"
+        charset:  "utf8mb4"
+
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        auto_mapping: true
+
+# Swiftmailer Configuration
+swiftmailer:
+    transport:  "%mailer_transport%"
+    encryption: "%mailer_encryption%"
+    host:       "%mailer_host%"
+    port:       "%mailer_port%"
+    username:   "%mailer_user%"
+    password:   "%mailer_password%"
+    spool:      { type: memory }
+    auth_mode:  "login"
+
+# BootstrapBundle Configuration
+braincrafted_bootstrap:
+    jquery_path: "%kernel.root_dir%/../src/BaseBundle/Resources/public/js/jquery-2.1.1.min.js"
+    css_preprocessor: "lessphp"
+    auto_configure:
+      knp_menu: false
+
+# HWIOAuthBundle Configuration
+# Don't forget to add new resource owners to twig > globals > services configuration
+hwi_oauth:
+    firewall_names: ["main"]
+    resource_owners:
+        github:
+            type: github
+            client_id: '%github_client_id%'
+            client_secret: '%github_secret%'
+        stack:
+            type: stack_exchange
+            client_id: '%stack_client_id%'
+            client_secret: '%stack_secret%'
+            options:
+                key: '%stack_key%'
+        google:
+            type: "google"
+            client_id: "%google_client_id%"
+            client_secret: "%google_secret%"
+            scope: "email"
+            options:
+                display: "page"
+                access_type: "online"
+        twitter:
+            type: "twitter"
+            client_id: "%twitter_client_id%"
+            client_secret: "%twitter_secret%"
+        facebook:
+            type: "facebook"
+            client_id: "%facebook_client_id%"
+            client_secret: "%facebook_secret%"
+            scope: "email"
+            options:
+                display: "page"
+
+httplug:
+    plugins:
+        logger: ~
+    clients:
+        default:
+            factory: 'httplug.factory.guzzle6'
+            plugins: ['httplug.plugin.logger']
+            config:
+                timeout: 2
+
+# Supported Website Languages
+jms_i18n_routing:
+    default_locale: "en"
+    locales: ["en", "fr"]
+    strategy: "prefix_except_default"
+
+# KnpMenu template configuration
+knp_menu:
+    twig:
+        template: "BaseBundle::knp_menu.html.twig"
+
+# Recaptcha
+ewz_recaptcha:
+    public_key:  "%recaptcha_public%"
+    private_key: "%recaptcha_private%"
+

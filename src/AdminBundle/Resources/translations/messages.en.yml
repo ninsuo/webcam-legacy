@@ -1,0 +1,34 @@
+admin:
+    groups:
+        id: ID
+        name: Name
+        notes: Notes
+        create: Create a new group
+        created: New group created successfully.
+        group: group
+        actions: Actions
+        delete: Delete
+        delete_confirm: Are you sure that you want to remouve group "%group%"?
+        deleted: 'Group #%id% removed successfully.'
+        manage: Users
+    groups_manage:
+        users: Users
+        title: Group %name%'s users
+        users_in: "%name%'s users:"
+        users_out: "Other users:"
+    users:
+        id: ID
+        network: Network
+        nickname: Name
+        contact: Email
+        enabled: Enabled
+        admin: Admin
+        actions: Actions
+        manage: Groups
+    users_manage:
+        groups: Groups
+        title: User %name%'s groups
+        groups_in: "%name%'s groups:"
+        groups_out: "Other groups:"
+    settings:
+        title: Application settings
