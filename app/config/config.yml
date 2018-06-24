@@ -140,10 +140,9 @@ httplug:
         logger: ~
     clients:
         default:
-            factory: 'httplug.factory.guzzle6'
+            factory: 'httplug.factory.curl'
             plugins: ['httplug.plugin.logger']
-            config:
-                timeout: 2
+            config: []
 
 # Supported Website Languages
 jms_i18n_routing:

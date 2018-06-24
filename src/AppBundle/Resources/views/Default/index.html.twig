@@ -1,15 +1,17 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
-{% block title %}Hello{% endblock %}
+{% block title %}{% endblock %}
 
 {% block body %}
 
-    {#
-    {{ form(form) }}
+    {% if is_granted('ROLE_USER') %}
 
-    {% if data %}
-        Code: <pre><code>{{ data }}</code></pre>
+        {% for camera in cameras %}
+            <h2>
+                <a href="{{ path('live', {name: camera}) }}">{{ camera }}</a>
+            </h2>
+        {% endfor %}
+
     {% endif %}
-    #}
 
 {% endblock %}

@@ -31,9 +31,7 @@ parameters:
     # Implement translations in: src/AppBundle/translations/messages.XX.xlf
     # /!\ Do not forget to add your new locales in config.yml, below jms_i18n_routing
     locale: en
-    supported_locales:
-        en: {flag: United-Kingdom, menu: English}
-        fr: {flag: France, menu: Français}
+    supported_locales: null
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
@@ -89,3 +87,6 @@ parameters:
 
     # Misc
     role_file_upload: ROLE_ADMIN
+
+    # Gr4bbr
+    webcam_path: /Users/alain/webcam/

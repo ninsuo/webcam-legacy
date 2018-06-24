@@ -1,5 +1,9 @@
 imports:
 
 parameters:
+  app.camera.class: AppBundle\Services\Camera
 
 services:
+  app.camera:
+    class: '%app.camera.class%'
+    parent: base.service

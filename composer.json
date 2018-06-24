@@ -47,9 +47,11 @@
     "ninsuo/symfony-collection": "^2",
     "symfony/web-server-bundle": "^3.3",
     "sensio/generator-bundle": "^3.0",
-    "guzzlehttp/guzzle": "^6.3",
     "php-http/httplug-bundle": "^1.10",
-    "php-http/guzzle6-adapter": "^1.1"
+    "php-http/curl-client": "^1.7",
+    "php-http/discovery": "^1.4",
+    "php-http/message": "^1.6",
+    "guzzlehttp/psr7": "^1.4"
   },
   "require-dev": {
     "symfony/phpunit-bridge": "^3.0"

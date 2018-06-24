@@ -1,0 +1,21 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block title %}{{ name }}{% endblock %}
+
+{% block body %}
+
+    <img id="live" src="{{ path('last', {name: name}) }}"/>
+
+{% endblock %}
+
+{% block script %}
+
+    <script type="text/javascript">
+
+        setInterval(function () {
+            $('#live').attr('src', '{{ path('last', {name: name})|e('js') }}?tm=' + new Date());
+        }, 1000);
+
+    </script>
+
+{% endblock %}
