@@ -1,16 +1,18 @@
-{% macro camera_html(camera, showName = true) %}
+{% macro camera_html(camera, home = true) %}
 
     <div class="text-center">
+        {% if home %}
         <a href="{{ path('live', {name: camera}) }}">
+            {% endif %}
             <img
                     class="live img-responsive"
                     data-src="{{ path('last', {name: camera}) }}"
                     src="{{ path('last', {name: camera}) }}"
             />
-            {% if showName %}
-                <div>{{ camera }}</div>
-            {% endif %}
+            {% if home %}
+            <div>{{ camera }}</div>
         </a>
+        {% endif %}
     </div>
 
 {% endmacro %}
