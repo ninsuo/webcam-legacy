@@ -2,22 +2,15 @@
 
 {% block title %}Cameras{% endblock %}
 
-
 {% block body %}
+    {% import 'AppBundle::macros.html.twig' as helper %}
 
     <div class="row">
 
         {% for camera in cameras %}
 
             <div class="col-md-6">
-                <a href="{{ path('live', {name: camera}) }}">
-                    <img
-                            class="live img-responsive"
-                            data-src="{{ path('last', {name: camera}) }}"
-                            src="{{ path('last', {name: camera}) }}"
-                    />
-                    <div class="text-center">{{ camera }}</div>
-                </a>
+                {{ helper.camera_html(camera) }}
             </div>
 
         {% endfor %}
@@ -27,18 +20,8 @@
 {% endblock %}
 
 {% block script %}
+    {% import 'AppBundle::macros.html.twig' as helper %}
 
-    <script type="text/javascript">
-
-        setInterval(function () {
-
-            $('.live').each(function () {
-                var that = $(this);
-                that.attr('src', (that.data('src') + '?tm=' + (Date.now() / 1000 | 0)));
-            });
-
-        }, 1000);
-
-    </script>
+    {{ helper.camera_js() }}
 
 {% endblock %}

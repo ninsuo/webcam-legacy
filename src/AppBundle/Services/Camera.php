@@ -3,6 +3,7 @@
 namespace AppBundle\Services;
 
 use BaseBundle\Base\BaseService;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Camera extends BaseService
 {
@@ -21,12 +22,8 @@ class Camera extends BaseService
 
     public function getLastImage($name)
     {
-        if (!preg_match('/^[0-9a-zA-Z]+$/', $name)) {
-            return $this->createErrorImage();
-        }
-
-        $dir = sprintf('%s/%s', $this->getParameter('webcam_path'), $name);
-        if (!is_dir($dir) || !is_readable($dir)) {
+        $dir = $this->checkDirectory($name);
+        if (is_null($dir)) {
             return $this->createErrorImage();
         }
 
@@ -35,21 +32,67 @@ class Camera extends BaseService
             return $this->createErrorImage();
         }
 
-        return [
-            'filename' => $file,
-            'content'  => file_get_contents($file),
-        ];
+        return file_get_contents($file);
     }
 
-    public function createErrorImage()
+    public function getArchives($name)
+    {
+        $dir = $this->checkDirectory($name);
+        if (is_null($dir)) {
+            return [];
+        }
+
+        $archives = [];
+        foreach (glob(sprintf('%s/*.tar.gz', $dir)) ?? [] as $archive) {
+            $archives[] = [
+                'filename' => basename($archive),
+                'size'     => filesize($archive),
+            ];
+        }
+
+        return $archives;
+    }
+
+    public function getArchive($name, $filename)
+    {
+        $dir = $this->checkDirectory($name);
+        if (is_null($dir)) {
+            throw new NotFoundHttpException();
+        }
+
+        if (!preg_match('/^[0-9a-zA-Z\.\-_]+$/', $filename)) {
+            throw new NotFoundHttpException();
+        }
+
+        $file = sprintf('%s/%s', $dir, $filename);
+        if (!is_file($file) || !is_readable($file)) {
+            throw new NotFoundHttpException();
+        }
+
+        return $file;
+    }
+
+
+    private function checkDirectory($name)
+    {
+        if (!preg_match('/^[0-9a-zA-Z]+$/', $name)) {
+            return null;
+        }
+
+        $dir = sprintf('%s/%s', $this->getParameter('webcam_path'), $name);
+        if (!is_dir($dir) || !is_readable($dir)) {
+            return null;
+        }
+
+        return $dir;
+    }
+
+    private function createErrorImage()
     {
         $img = imagecreate(1280, 720);
         ob_start();
         imagepng($img);
 
-        return [
-            'filename' => null,
-            'content'  => ob_get_clean(),
-        ];
+        return ob_get_clean();
     }
 }

@@ -1,0 +1,31 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block title %}{{ name }}{% endblock %}
+
+{% block body %}
+    {% import 'AppBundle::macros.html.twig' as helper %}
+
+    {{ helper.camera_html(name, false) }}
+
+    <hr/>
+
+    <div id="refresh" data-endpoint="{{ path('refresh', {name: name}) }}" data-output="refresh">
+        {{ render(controller('AppBundle:Live:refresh', {name: name})) }}
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    {% import 'AppBundle::macros.html.twig' as helper %}
+
+    {{ helper.camera_js() }}
+
+    <script type="text/javascript">
+
+        setInterval(function () {
+            $('#refresh').domAjax();
+        }, 1000);
+
+    </script>
+
+{% endblock %}

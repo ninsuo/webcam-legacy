@@ -16,6 +16,16 @@ class LightExtension extends BaseTwigExtension
             new \Twig_SimpleFunction('current_uri', [$this, 'currentUri']),
             new \Twig_SimpleFunction('page_id', [$this, 'pageId']),
             new \Twig_SimpleFunction('array_to_query_fields', [$this, 'arrayToQueryFields'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('time', 'time'),
+        ];
+    }
+
+    public function getFilters()
+    {
+        return [
+            new \Twig_SimpleFilter('base64_decode', 'base64_decode'),
+            new \Twig_SimpleFilter('base64_encode', 'base64_encode'),
+            new \Twig_SimpleFilter('formatBytes', [$this, 'formatBytes']),
         ];
     }
 
@@ -45,15 +55,15 @@ class LightExtension extends BaseTwigExtension
     public function pageId($hashed = false, $ignoredParams = [])
     {
         $request = $this->get('request_stack')->getMasterRequest();
-        $route = $request->get('_route');
-        $params = $request->get('_route_params');
+        $route   = $request->get('_route');
+        $params  = $request->get('_route_params');
 
         unset($params['_locale']);
         foreach ($ignoredParams as $ignoredParam) {
             unset($params[$ignoredParam]);
         }
 
-        $data = $route . '/' . join('/', $params);
+        $data = $route.'/'.join('/', $params);
 
         if ($hashed) {
             return strtr(base64_encode(hex2bin(hash('sha256', $data))), '+/=', '-_,');
@@ -67,8 +77,9 @@ class LightExtension extends BaseTwigExtension
      * See: BaseBundle::macros.html.twig
      *
      * @param string $key
-     * @param mixed $value
+     * @param mixed  $value
      * @param string $keyPrefix
+     *
      * @return string
      */
     public function arrayToQueryFields($key, $value, $keyPrefix = null)
@@ -85,6 +96,18 @@ class LightExtension extends BaseTwigExtension
         }
 
         return $inputs;
+    }
+
+    public function formatBytes($bytes, $precision = 2)
+    {
+        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+
+        $bytes = max($bytes, 0);
+        $pow   = floor(($bytes ? log($bytes) : 0) / log(1024));
+        $pow   = min($pow, count($units) - 1);
+        $bytes /= (1 << (10 * $pow));
+
+        return round($bytes, $precision).' '.$units[$pow];
     }
 
     public function getName()

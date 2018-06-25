@@ -1,0 +1,33 @@
+{% macro camera_html(camera, showName = true) %}
+
+    <div class="text-center">
+        <a href="{{ path('live', {name: camera}) }}">
+            <img
+                    class="live img-responsive"
+                    data-src="{{ path('last', {name: camera}) }}"
+                    src="{{ path('last', {name: camera}) }}"
+            />
+            {% if showName %}
+                <div>{{ camera }}</div>
+            {% endif %}
+        </a>
+    </div>
+
+{% endmacro %}
+
+{% macro camera_js() %}
+
+    <script type="text/javascript">
+
+        setInterval(function () {
+
+            $('.live').each(function () {
+                var that = $(this);
+                that.attr('src', (that.data('src') + '?tm=' + (Date.now() / 1000 | 0)));
+            });
+
+        }, 1000);
+
+    </script>
+
+{% endmacro %}

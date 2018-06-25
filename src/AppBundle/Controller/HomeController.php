@@ -8,10 +8,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @Security("has_role('ROLE_USER')")
+ */
 class HomeController extends BaseController
 {
     /**
-     * @Security("has_role('ROLE_USER')")
      * @Route("/", name="home")
      * @Template()
      */
@@ -23,13 +25,12 @@ class HomeController extends BaseController
     }
 
     /**
-     * @Security("has_role('ROLE_USER')")
      * @Route("/last/{name}.jpg", name="last")
      * @Template()
      */
     public function lastAction($name)
     {
-        return new Response($this->get('app.camera')->getLastImage($name)['content'], 200, [
+        return new Response($this->get('app.camera')->getLastImage($name), 200, [
             'Content-Type'     => 'image/jpeg',
             'Pragma-Directive' => 'no-cache',
             'Cache-Directive'  => 'no-cache',
