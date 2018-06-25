@@ -7,7 +7,33 @@
 
     {{ helper.camera_html(name, false) }}
 
+    <div id="slider"></div>
+
     <hr/>
+
+
+    <h3>Archives</h3>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Filename</th>
+            <th>Size</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for archive in archives %}
+            <tr>
+                <td><a href="{{ path('archive', {name: name, filename: archive.filename}) }}">{{ archive.filename }}</a>
+                </td>
+                <td>{{ archive.size|formatBytes }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <hr/>
+
+    <h3>Activity</h3>
 
     <div id="refresh" data-endpoint="{{ path('refresh', {name: name}) }}" data-output="refresh">
         {{ render(controller('AppBundle:Live:refresh', {name: name})) }}
@@ -18,7 +44,24 @@
 {% block script %}
     {% import 'AppBundle::macros.html.twig' as helper %}
 
+    {# Live #}
+
     {{ helper.camera_js() }}
+
+    {# History #}
+
+    <script type="text/javascript">
+        $('#slider').slider({
+            min: 0,
+            max: 10000,
+            value: 10000,
+            slide: function (event, ui) {
+                alert(ui.value);
+            }
+        });
+    </script>
+
+    {# Activity #}
 
     <script type="text/javascript">
 

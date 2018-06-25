@@ -1,22 +1,5 @@
 <div class="center">
 
-    <h3>Archives</h3>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Filename</th>
-            <th>Size</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for archive in archives %}
-            <tr>
-                <td><a href="{{ path('archive', {name: name, filename: archive.filename}) }}">{{ archive.filename }}</a>
-                </td>
-                <td>{{ archive.size|formatBytes }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    todo: activity
 
 </div>

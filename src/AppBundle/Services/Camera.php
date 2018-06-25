@@ -32,7 +32,18 @@ class Camera extends BaseService
             return $this->createErrorImage();
         }
 
-        return file_get_contents($file);
+        $img = imagecreatefromjpeg($file);
+        imagettftext(
+            $img, 28, 0, 840, 700,
+            imagecolorallocate($img, 255, 255, 0),
+            __DIR__.'/../Resources/fonts/Lato/Lato-Regular.ttf',
+            date("d/m/Y H:i:s \U\T\C", filemtime($file))
+        );
+
+        ob_start();
+        imagejpeg($img);
+
+        return ob_get_clean();
     }
 
     public function getArchives($name)
@@ -91,7 +102,7 @@ class Camera extends BaseService
     {
         $img = imagecreate(1280, 720);
         ob_start();
-        imagepng($img);
+        imagejpeg($img);
 
         return ob_get_clean();
     }

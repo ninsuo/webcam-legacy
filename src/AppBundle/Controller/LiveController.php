@@ -21,7 +21,8 @@ class LiveController extends BaseController
     public function indexAction($name)
     {
         return [
-            'name' => $name,
+            'name'     => $name,
+            'archives' => $this->get('app.camera')->getArchives($name),
         ];
     }
 
@@ -32,8 +33,7 @@ class LiveController extends BaseController
     public function refreshAction($name)
     {
         return [
-            'name'     => $name,
-            'archives' => $this->get('app.camera')->getArchives($name),
+            'name' => $name,
         ];
     }
 
