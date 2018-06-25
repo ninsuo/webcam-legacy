@@ -30,7 +30,7 @@ class Camera extends BaseService
             return $this->createErrorImage();
         }
 
-        $file = sprintf('%s/%s', $dir, exec(sprintf('ls -r %s/|head -1', $dir)));
+        $file = sprintf('%s/%s', $dir, exec(sprintf('ls -r %s/|grep -i jpg|head -1', $dir)));
         if (!is_readable($file)) {
             return $this->createErrorImage();
         }
