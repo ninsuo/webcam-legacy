@@ -5,7 +5,7 @@ Webcam viewer
 
 Your camera should send a new picture in a directory of your server every
 second for the best live possible. Those pictures should have the read
-permission for www-data (easy, make sure they are `-rw-r--r`).
+permission for www-data (easy, make sure they are `-rw-r--r--`).
 
 ## Installation
 
@@ -31,14 +31,14 @@ php app/console doctrine:schema:create
 # list your users, from here you can find your id (should be 1, but stay safe)
 php app/console user:list
 
-# enable user with id = 42
-php app/console user:enable 42
+# enable user with id = 1
+php app/console user:enable 1
 
-# set user with id = 42 as admin
-php app/console user:admin 42
+# set user with id = 1 as admin
+php app/console user:admin 1
 ```
 
-Note that those commands are toggles, so running `php app/console user:admin 42` a second time will remove admin
+Note that those commands are toggles, so running `php app/console user:admin 1` a second time will remove admin
 privileges for the given user.
 
 ## License

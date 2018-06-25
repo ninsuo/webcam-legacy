@@ -12,57 +12,47 @@
 
         <table class="table">
             <thead>
-                <tr>
-                    <th>{{ macros.orderBy(orderBy, 'id', 'admin.users.id') }}</th>
-                    <th>{{ macros.orderBy(orderBy, 'resourceOwner', 'admin.users.network') }}</th>
-                    <th>{{ macros.orderBy(orderBy, 'nickname', 'admin.users.nickname') }}</th>
-                    <th>{{ macros.orderBy(orderBy, 'contact', 'admin.users.contact') }}</th>
-                    <th>{{ 'admin.users.actions' | trans }}</th>
-                    <th>{{ macros.orderBy(orderBy, 'isEnabled', 'admin.users.enabled') }}</th>
-                    <th>{{ macros.orderBy(orderBy, 'isAdmin', 'admin.users.admin') }}</th>
-                </tr>
+            <tr>
+                <th>{{ macros.orderBy(orderBy, 'id', 'admin.users.id') }}</th>
+                <th>{{ macros.orderBy(orderBy, 'resourceOwner', 'admin.users.network') }}</th>
+                <th>{{ macros.orderBy(orderBy, 'nickname', 'admin.users.nickname') }}</th>
+                <th>{{ macros.orderBy(orderBy, 'contact', 'admin.users.contact') }}</th>
+                <th>{{ macros.orderBy(orderBy, 'isEnabled', 'admin.users.enabled') }}</th>
+                <th>{{ macros.orderBy(orderBy, 'isAdmin', 'admin.users.admin') }}</th>
+            </tr>
             </thead>
             <tbody>
-                {% for user in pager.currentPageResults %}
-                    <tr>
-                        <td>{{ user.id }}</td>
-                        <td>
-                            <img class="oauth-image" src="{{ asset('bundles/base/img/oauth/' ~ user.resourceOwner ~ '-small.png') }}" alt=""/> {{ user.resourceOwner|title }}
-                        </td>
-                        <td>
-                            {% if auto_updated %}
-                                {{ macros.user(user) }}
-                            {% else %}
-                                {{
-                                    include('BaseBundle::editOnClick.html.twig', {
-                                        'text': macros.user(user),
-                                        'endpoint': path('_admin_users_edit_nickname', {id: user.id}),
-                                    })
-                                }}
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if auto_updated %}
-                                {{ user.contact }}
-                            {% else %}
-                                {{
-                                    include('BaseBundle::editOnClick.html.twig', {
-                                        'text': user.contact,
-                                        'endpoint': path('_admin_users_edit_contact', {id: user.id}),
-                                    })
-                                }}
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a
-                                href="{{ path('admin_users_manage', {id: user.id}) }}"
-                                class="btn btn-warning btn-sm">{{ 'admin.users.manage' | trans }}</a>
-                        </td>
-                        <td>
-                            {% if me == user.id %}
-                                &nbsp;
-                            {% else %}
-                                <input
+            {% for user in pager.currentPageResults %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>
+                        <img class="oauth-image" src="{{ asset('bundles/base/img/oauth/' ~ user.resourceOwner ~ '-small.png') }}" alt=""/> {{ user.resourceOwner|title }}
+                    </td>
+                    <td>
+                        {% if auto_updated %}
+                            {{ macros.user(user) }}
+                        {% else %}
+                            {{ include('BaseBundle::editOnClick.html.twig', {
+                                'text': macros.user(user),
+                                'endpoint': path('_admin_users_edit_nickname', {id: user.id}),
+                            }) }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if auto_updated %}
+                            {{ user.contact }}
+                        {% else %}
+                            {{ include('BaseBundle::editOnClick.html.twig', {
+                                'text': user.contact,
+                                'endpoint': path('_admin_users_edit_contact', {id: user.id}),
+                            }) }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if me == user.id %}
+                            &nbsp;
+                        {% else %}
+                            <input
                                     type="checkbox"
                                     class="domajax change"
                                     data-toggle="toggle"
@@ -73,14 +63,14 @@
                                     data-input-attr="id"
                                     data-id="{{ user.id }}"
                                     {% if user.isEnabled %}checked{% endif %}
-                                />
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if me == user.id %}
-                                &nbsp;
-                            {% else %}
-                                <input
+                            />
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if me == user.id %}
+                            &nbsp;
+                        {% else %}
+                            <input
                                     type="checkbox"
                                     class="domajax change"
                                     data-toggle="toggle"
@@ -91,11 +81,11 @@
                                     data-input-attr="id"
                                     data-id="{{ user.id }}"
                                     {% if user.isAdmin %}checked{% endif %}
-                                />
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
+                            />
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
 
