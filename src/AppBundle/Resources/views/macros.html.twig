@@ -21,10 +21,18 @@
 
         setInterval(function () {
 
-            $('.live').each(function () {
-                var that = $(this);
-                that.attr('src', (that.data('src') + '?tm=' + (Date.now() / 1000 | 0)));
-            });
+            var val = 10000;
+
+            if ($('#slider').length) {
+                val = $('#slider').slider("option", "value");
+            }
+
+            if (val === 10000) {
+                $('.live').each(function () {
+                    var that = $(this);
+                    that.attr('src', (that.data('src') + '?tm=' + (Date.now() / 1000 | 0)));
+                });
+            }
 
         }, 1000);
 

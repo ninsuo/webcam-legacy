@@ -20,6 +20,20 @@ class Camera extends BaseService
         return $cameras;
     }
 
+    public function getImage($name, $value)
+    {
+        $dir = $this->checkDirectory($name);
+        if (is_null($dir)) {
+            return $this->createErrorImage();
+        }
+
+        $count = trim(exec(sprintf('ls %s|grep -i jpg|wc -l', $dir)));
+        $no    = intval($count * $value / 10000);
+        $file  = exec(sprintf("ls %s|cat -n|grep '%d\t'|cut -d ' ' -f 2|cut -d '\t' -f 2", $dir, $no));
+
+        return $this->timestampize(sprintf('%s/%s', $dir, $file));
+    }
+
     public function getLastImage($name)
     {
         $dir = $this->checkDirectory($name);
@@ -32,6 +46,11 @@ class Camera extends BaseService
             return $this->createErrorImage();
         }
 
+        return $this->timestampize($file);
+    }
+
+    public function timestampize($file)
+    {
         $img = imagecreatefromjpeg($file);
         imagettftext(
             $img, 28, 0, 840, 700,

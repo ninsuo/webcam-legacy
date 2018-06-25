@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\Stream;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Security("has_role('ROLE_USER')")
@@ -27,14 +29,19 @@ class LiveController extends BaseController
     }
 
     /**
-     * @Route("/refresh/{name}", name="refresh")
+     * @Route("/history/{name}.jpg", name="history")
      * @Template()
      */
-    public function refreshAction($name)
+    public function historyAction(Request $request, $name)
     {
-        return [
-            'name' => $name,
-        ];
+        return new Response($this->get('app.camera')->getImage($name, $request->query->get('val')), 200, [
+            'Content-Type'     => 'image/jpeg',
+            'Pragma-Directive' => 'no-cache',
+            'Cache-Directive'  => 'no-cache',
+            'Cache-Control'    => 'no-cache',
+            'Pragma'           => 'no-cache',
+            'Expires'          => '0',
+        ]);
     }
 
     /**
@@ -48,5 +55,16 @@ class LiveController extends BaseController
                 $this->get('app.camera')->getArchive($name, $filename)
             )
         );
+    }
+
+    /**
+     * @Route("/refresh/{name}", name="refresh")
+     * @Template()
+     */
+    public function refreshAction($name)
+    {
+        return [
+            'name' => $name,
+        ];
     }
 }
