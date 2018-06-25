@@ -19,15 +19,11 @@ php composer.phar install
 php app/console doctrine:schema:create
 ```
 
-2) To use the login system, you need to get your client ID and secret on at least one provider:
+2) To use the login system, you need to get your google client ID and secret:
 
 | Provider       | Setup URL                                     |
 | -------------- | --------------------------------------------- |
-| GitHub         | https://github.com/settings/developers        |
-| StackExchange  | https://stackapps.com/apps/oauth/             |
 | Google         | https://console.developers.google.com/project |
-| Twitter        | https://apps.twitter.com/                     |
-| Facebook       | https://developers.facebook.com/apps/         |
 
 3) Be enabled and admin! Once you created your first user, you can run the following commands:
 

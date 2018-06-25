@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 class DefaultController extends BaseController
 {
     /**
+     * @Security("has_role('ROLE_USER')")
      * @Route("/", name="home")
      * @Template()
      */

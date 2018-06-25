@@ -18,12 +18,8 @@ security:
             anonymous: ~
             oauth:
                 resource_owners:
-                    github: "/login/check-github"
-                    stack: "/login/check-stack"
                     google: "/login/check-google"
-                    twitter: "/login/check-twitter"
-                    facebook: "/login/check-facebook"
-                login_path: "/login"
+                login_path: "/connect/google"
                 failure_path: "/login"
                 default_target_path: "/welcome"
                 oauth_user_provider:

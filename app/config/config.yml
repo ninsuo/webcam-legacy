@@ -34,11 +34,7 @@ twig:
             menu_left: "%menu_left_enabled%"
             menu_right: "%menu_right_enabled%"
             services:
-                GitHub: "%github_enabled%"
-                Stack Exchange: "%stack_enabled%"
                 Google: "%google_enabled%"
-                Twitter: "%twitter_enabled%"
-                Facebook: "%facebook_enabled%"
             site:
                 brand: "%site_brand%"
                 title: "%site_title%"
