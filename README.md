@@ -41,6 +41,15 @@ php app/console user:admin 1
 Note that those commands are toggles, so running `php app/console user:admin 1` a second time will remove admin
 privileges for the given user.
 
+## Development
+
+In order to develop this project on a Mac, you may need to mount the server that pocesses your images
+using MacFuse/SSHFS.
+
+```
+sshfs user@host:/remote/path/to/webcams ~/local-directory -o cache=no,reconnect,defer_permissions,noappledouble
+```
+
 ## License
 
 - This project is released under the MIT license

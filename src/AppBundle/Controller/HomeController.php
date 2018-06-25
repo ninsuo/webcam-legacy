@@ -8,7 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 
-class DefaultController extends BaseController
+class HomeController extends BaseController
 {
     /**
      * @Security("has_role('ROLE_USER')")
@@ -24,30 +24,18 @@ class DefaultController extends BaseController
 
     /**
      * @Security("has_role('ROLE_USER')")
-     * @Route("/live/{name}", name="live")
-     * @Template()
-     */
-    public function liveAction($name)
-    {
-        return [
-            'name' => $name,
-        ];
-    }
-
-    /**
-     * @Security("has_role('ROLE_USER')")
      * @Route("/last/{name}.jpg", name="last")
      * @Template()
      */
     public function lastAction($name)
     {
-        return new Response($this->get('app.camera')->getLastImage($name), 200, [
-            'Content-Type' => 'image/jpeg',
-            'Pragma-Directive: no-cache',
-            'Cache-Directive: no-cache',
-            'Cache-Control: no-cache',
-            'Pragma: no-cache',
-            'Expires: 0',
+        return new Response($this->get('app.camera')->getLastImage($name)['content'], 200, [
+            'Content-Type'     => 'image/jpeg',
+            'Pragma-Directive' => 'no-cache',
+            'Cache-Directive'  => 'no-cache',
+            'Cache-Control'    => 'no-cache',
+            'Pragma'           => 'no-cache',
+            'Expires'          => '0',
         ]);
     }
 }

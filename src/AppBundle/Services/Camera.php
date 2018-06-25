@@ -35,7 +35,10 @@ class Camera extends BaseService
             return $this->createErrorImage();
         }
 
-        return file_get_contents($file);
+        return [
+            'filename' => $file,
+            'content'  => file_get_contents($file),
+        ];
     }
 
     public function createErrorImage()
@@ -44,6 +47,9 @@ class Camera extends BaseService
         ob_start();
         imagepng($img);
 
-        return ob_get_clean();
+        return [
+            'filename' => null,
+            'content'  => ob_get_clean(),
+        ];
     }
 }
