@@ -51,6 +51,8 @@ class Camera extends BaseService
 
     public function timestampize($file)
     {
+        date_default_timezone_set('UTC');
+
         $img = imagecreatefromjpeg($file);
         imagettftext(
             $img, 28, 0, 840, 700,
