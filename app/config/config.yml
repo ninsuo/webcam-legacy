@@ -101,16 +101,6 @@ braincrafted_bootstrap:
 hwi_oauth:
     firewall_names: ["main"]
     resource_owners:
-        github:
-            type: github
-            client_id: '%github_client_id%'
-            client_secret: '%github_secret%'
-        stack:
-            type: stack_exchange
-            client_id: '%stack_client_id%'
-            client_secret: '%stack_secret%'
-            options:
-                key: '%stack_key%'
         google:
             type: "google"
             client_id: "%google_client_id%"
@@ -119,17 +109,6 @@ hwi_oauth:
             options:
                 display: "page"
                 access_type: "online"
-        twitter:
-            type: "twitter"
-            client_id: "%twitter_client_id%"
-            client_secret: "%twitter_secret%"
-        facebook:
-            type: "facebook"
-            client_id: "%facebook_client_id%"
-            client_secret: "%facebook_secret%"
-            scope: "email"
-            options:
-                display: "page"
 
 httplug:
     plugins:
