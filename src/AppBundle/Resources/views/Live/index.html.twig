@@ -74,8 +74,8 @@
     <script type="text/javascript">
         $('#slider').slider({
             min: 0,
-            max: 10000,
-            value: 10000,
+            max: {{ constant('AppBundle\\Services\\Camera::SLIDER') }},
+            value: {{ constant('AppBundle\\Services\\Camera::SLIDER') }},
             slide: function (event, ui) {
                 $('.live').attr('src', '{{ path('history', {name: name}) }}?tm=' + (Date.now() / 1000 | 0) + '&val=' + ui.value);
             }
@@ -91,7 +91,9 @@
         });
 
         function renderSearchResult(elem, response) {
-            $('#slider').slider('value', response.slider);
+            var slider = $('#slider');
+            slider.slider('value', response.slider);
+            slider.slider('option', 'slide').call(slider);
         }
 
     </script>

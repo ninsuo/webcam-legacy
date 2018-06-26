@@ -23,13 +23,13 @@
 
         setInterval(function () {
 
-            var val = 10000;
+            var val = {{ constant('AppBundle\\Services\\Camera::SLIDER') }};
 
             if ($('#slider').length) {
                 val = $('#slider').slider("option", "value");
             }
 
-            if (val === 10000) {
+            if (val === {{ constant('AppBundle\\Services\\Camera::SLIDER') }}) {
                 $('.live').each(function () {
                     var that = $(this);
                     that.attr('src', (that.data('src') + '?tm=' + (Date.now() / 1000 | 0)));

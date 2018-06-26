@@ -45,7 +45,7 @@ class LiveController extends BaseController
         }
 
         return new JsonResponse(
-            $this->get('app.camera')->getImageAt($name, strtotime(date("Y-m-d")) + $tm)
+            $this->get('app.camera')->getImageAt($name, $tm)
         );
     }
 

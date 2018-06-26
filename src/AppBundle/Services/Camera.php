@@ -7,6 +7,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Camera extends BaseService
 {
+    const SLIDER = 10000;
+
+    public function __construct()
+    {
+        date_default_timezone_set('UTC');
+    }
+
     public function getAvailableCameras()
     {
         $cameras = [];
@@ -28,7 +35,7 @@ class Camera extends BaseService
         }
 
         $count = trim(exec(sprintf('ls %s|grep -i jpg|wc -l', $dir)));
-        $no    = intval($count * $value / 10000);
+        $no    = intval($count * $value / self::SLIDER);
         $file  = exec(sprintf("ls %s|cat -n|grep '%d\t'|cut -d ' ' -f 2|cut -d '\t' -f 2", $dir, $no));
 
         return $this->timestampize(sprintf('%s/%s', $dir, $file));
@@ -51,8 +58,6 @@ class Camera extends BaseService
 
     public function timestampize($file)
     {
-        date_default_timezone_set('UTC');
-
         $img = imagecreatefromjpeg($file);
         imagettftext(
             $img, 28, 0, 840, 700,
@@ -106,9 +111,11 @@ class Camera extends BaseService
 
     public function getImageAt($name, $tm)
     {
+        $tm = strtotime(date("Y-m-d")) + $tm;
+
         $dir = $this->checkDirectory($name);
         if (!$dir) {
-            return ['no' => null, 'slider' => 10000];
+            return ['no' => null, 'slider' => self::SLIDER];
         }
 
         $exec = sprintf("ls -Ahop --time-style +\" %%s \" %s|cat -n|grep %d|cut -d ' ' -f 2|cut -d '\t' -f 1", $dir, $tm);
@@ -117,12 +124,12 @@ class Camera extends BaseService
             return [
                 'exec'   => $exec,
                 'no'     => null,
-                'slider' => 10000,
+                'slider' => self::SLIDER,
             ];
         }
 
         $count = trim(exec(sprintf('ls %s|grep -i jpg|wc -l', $dir)));
-        $value = intval($no * 10000 / $count);
+        $value = intval($no * self::SLIDER / $count);
 
         return ['no' => $no, 'slider' => $value];
     }
