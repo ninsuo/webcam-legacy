@@ -26,6 +26,7 @@ class LightExtension extends BaseTwigExtension
             new \Twig_SimpleFilter('base64_decode', 'base64_decode'),
             new \Twig_SimpleFilter('base64_encode', 'base64_encode'),
             new \Twig_SimpleFilter('formatBytes', [$this, 'formatBytes']),
+            new \Twig_SimpleFilter('ago', [$this, 'ago']),
         ];
     }
 
@@ -108,6 +109,32 @@ class LightExtension extends BaseTwigExtension
         $bytes /= (1 << (10 * $pow));
 
         return round($bytes, $precision).' '.$units[$pow];
+    }
+
+    public function ago($timestamp)
+    {
+        $time = time() - $timestamp;
+        $time = ($time < 1) ? 1 : $timestamp;
+
+        $tokens = [
+            31536000 => 'year',
+            2592000  => 'month',
+            604800   => 'week',
+            86400    => 'day',
+            3600     => 'hour',
+            60       => 'minute',
+            1        => 'second',
+        ];
+
+        foreach ($tokens as $unit => $text) {
+            if ($time < $unit) {
+                continue;
+            }
+
+            $numberOfUnits = floor($time / $unit);
+
+            return $numberOfUnits.' '.$text.(($numberOfUnits > 1) ? 's' : '');
+        }
     }
 
     public function getName()

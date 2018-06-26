@@ -2,6 +2,8 @@
 
 namespace BaseBundle\Base;
 
+use AppBundle\Entity\Watcher;
+use AppBundle\Services\Camera;
 use BaseBundle\Traits\ServiceTrait;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Adapter\ArrayAdapter;
@@ -173,5 +175,16 @@ abstract class BaseController extends Controller
         }
 
         return $url;
+    }
+
+    protected function watch($name, &$size)
+    {
+        if (!in_array($size, [Camera::SIZE_SMALL, Camera::SIZE_LARGE])) {
+            throw $this->createNotFoundException();
+        }
+
+        if ($size === Camera::SIZE_LARGE) {
+            $this->getManager(Watcher::class)->save($this->getUser(), $name);
+        }
     }
 }

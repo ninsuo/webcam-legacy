@@ -10,7 +10,16 @@
         {% for camera in cameras %}
 
             <div class="col-md-6">
-                {{ helper.camera_html(camera) }}
+                <div class="text-center">
+                    <a href="{{ path('live', {name: camera}) }}">
+                        <img
+                                class="live img-responsive"
+                                data-src="{{ path('last', {name: camera, size: constant('AppBundle\\Services\\Camera::SIZE_SMALL')}) }}"
+                                src="{{ path('last', {name: camera, size: constant('AppBundle\\Services\\Camera::SIZE_SMALL')}) }}"
+                        />
+                        <div>{{ camera }}</div>
+                    </a>
+                </div>
             </div>
 
         {% endfor %}

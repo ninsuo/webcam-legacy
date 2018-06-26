@@ -2,7 +2,6 @@
 
 namespace BaseBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -102,29 +101,6 @@ class User implements UserInterface, EquatableInterface
      * @var array
      */
     protected $roles = ['ROLE_USER'];
-
-    /**
-     * @var ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="Group", cascade={"persist", "remove"}, inversedBy="users")
-     * @ORM\JoinTable(name="users_groups",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE")
-     *     }
-     * )
-     */
-    protected $groups;
-
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        $this->groups = new ArrayCollection();
-    }
 
     /**
      * Get resourceOwner.
@@ -346,54 +322,6 @@ class User implements UserInterface, EquatableInterface
     public function setIsAdmin($isAdmin)
     {
         $this->isAdmin = $isAdmin;
-
-        return $this;
-    }
-
-    /**
-     * Get groups.
-     *
-     * @return ArrayCollection
-     */
-    public function getGroups()
-    {
-        return $this->groups;
-    }
-
-    /**
-     * Add group.
-     *
-     * @param Group $group
-     *
-     * @return User
-     */
-    public function addGroup(Group $group)
-    {
-        if ($this->groups->contains($group)) {
-            return;
-        }
-
-        $this->groups->add($group);
-        $group->addUser($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove group.
-     *
-     * @param Group $group
-     *
-     * @return User
-     */
-    public function removeGroup(Group $group)
-    {
-        if (!$this->groups->contains($group)) {
-            return;
-        }
-
-        $this->groups->removeElement($group);
-        $group->removeUser($this);
 
         return $this;
     }

@@ -26,12 +26,12 @@ class HistoryController extends BaseController
     }
 
     /**
-     * @Route("/file/{name}/{file}", name="file")
+     * @Route("/file/{name}/{size}-{file}", name="file")
      * @Template()
      */
-    public function fileAction($name, $file)
+    public function fileAction($name, $file, $size)
     {
-        return new Response($this->get('app.camera')->getImageByFilename($name, $file), 200, [
+        return new Response($this->get('app.camera')->getImageByFilename($name, $file, $size), 200, [
             'Content-Type'     => 'image/jpeg',
             'Pragma-Directive' => 'no-cache',
             'Cache-Directive'  => 'no-cache',

@@ -7,9 +7,9 @@ use BaseBundle\Traits\ServiceTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUserProvider as BaseUserProvider;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class OAuthUserProvider extends BaseUserProvider implements ContainerAwareInterface
 {
@@ -28,15 +28,15 @@ class OAuthUserProvider extends BaseUserProvider implements ContainerAwareInterf
         list($resourceOwner, $resourceOwnerId) = json_decode($username, true);
 
         $user = $this->em->getRepository('BaseBundle:User')
-           ->getUserByResourceOwnerId($resourceOwner, $resourceOwnerId);
+            ->getUserByResourceOwnerId($resourceOwner, $resourceOwnerId);
 
         if ($user) {
 
             if (!$user->isEnabled()) {
                 throw new AuthenticationException(
-                   $this->get('translator')->trans('base.error.user_not_enabled', [
-                       '%id%' => $user->getId(),
-                   ])
+                    $this->get('translator')->trans('base.error.user_not_enabled', [
+                        '%id%' => $user->getId(),
+                    ])
                 );
             }
 
@@ -55,11 +55,11 @@ class OAuthUserProvider extends BaseUserProvider implements ContainerAwareInterf
         $user            = $this->loadUserByUsername($json);
 
         if ($this->getParameter('user_email_restriction')
-           && !preg_match($this->getParameter('user_email_restriction'), $response->getEmail())) {
+            && !preg_match($this->getParameter('user_email_restriction'), $response->getEmail())) {
             throw new AuthenticationException(
-               $this->get('translator')->trans('base.error.user_email_restriction', [
-                   '%email%' => $response->getEmail(),
-               ])
+                $this->get('translator')->trans('base.error.user_email_restriction', [
+                    '%email%' => $response->getEmail(),
+                ])
             );
         }
 
@@ -104,19 +104,6 @@ class OAuthUserProvider extends BaseUserProvider implements ContainerAwareInterf
     {
         if ($user->isAdmin()) {
             $user->addRole('ROLE_ADMIN');
-
-            // Setting up all possible permissions
-            $all = $this->em->getRepository('BaseBundle:Group')->findAll();
-            foreach ($all as $one) {
-                $user->addRole('ROLE_'.mb_strtoupper($one->getName()));
-            }
-
-            return $user;
-        }
-
-        // Granted permissions
-        foreach ($user->getGroups()->toArray() as $group) {
-            $user->addRole('ROLE_'.strtoupper($group->getName()));
         }
 
         return $user;

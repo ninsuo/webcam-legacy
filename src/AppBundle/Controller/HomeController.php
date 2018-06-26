@@ -25,12 +25,14 @@ class HomeController extends BaseController
     }
 
     /**
-     * @Route("/last/{name}.jpg", name="last")
+     * @Route("/last/{name}-{size}.jpg", name="last")
      * @Template()
      */
-    public function lastAction($name)
+    public function lastAction($name, $size)
     {
-        return new Response($this->get('app.camera')->getLastImage($name), 200, [
+        $this->watch($name, $size);
+
+        return new Response($this->get('app.camera')->getLastImage($name, $size), 200, [
             'Content-Type'     => 'image/jpeg',
             'Pragma-Directive' => 'no-cache',
             'Cache-Directive'  => 'no-cache',

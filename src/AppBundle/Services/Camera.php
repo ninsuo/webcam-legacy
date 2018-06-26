@@ -9,6 +9,9 @@ class Camera extends BaseService
 {
     const SLIDER = 10000;
 
+    const SIZE_SMALL = 'small';
+    const SIZE_LARGE = 'large';
+
     public function __construct()
     {
         date_default_timezone_set('UTC');
@@ -27,7 +30,7 @@ class Camera extends BaseService
         return $cameras;
     }
 
-    public function getImageByNumber($name, $value)
+    public function getImageByNumber($name, $value, $size)
     {
         $dir = $this->checkDirectory($name);
         if (is_null($dir)) {
@@ -38,10 +41,10 @@ class Camera extends BaseService
         $no    = intval($count * $value / self::SLIDER);
         $file  = exec(sprintf("ls %s|cat -n|grep '%d\t'|cut -d ' ' -f 2|cut -d '\t' -f 2", $dir, $no));
 
-        return $this->timestampize(sprintf('%s/%s', $dir, $file));
+        return $this->timestampize(sprintf('%s/%s', $dir, $file), $size);
     }
 
-    public function getImageByFilename($name, $file)
+    public function getImageByFilename($name, $file, $size)
     {
         $dir = $this->checkDirectory($name);
         if (is_null($dir)) {
@@ -52,10 +55,10 @@ class Camera extends BaseService
             return $this->createErrorImage();
         }
 
-        return $this->timestampize(sprintf('%s/%s', $dir, $file));
+        return $this->timestampize(sprintf('%s/%s', $dir, $file), $size);
     }
 
-    public function getLastImage($name)
+    public function getLastImage($name, $size)
     {
         $dir = $this->checkDirectory($name);
         if (is_null($dir)) {
@@ -67,10 +70,10 @@ class Camera extends BaseService
             return $this->createErrorImage();
         }
 
-        return $this->timestampize($file);
+        return $this->timestampize($file, $size);
     }
 
-    public function timestampize($file)
+    public function timestampize($file, $size)
     {
         $img = imagecreatefromjpeg($file);
         imagettftext(
@@ -79,6 +82,10 @@ class Camera extends BaseService
             __DIR__.'/../Resources/fonts/Lato/Lato-Regular.ttf',
             date("d/m/Y H:i:s \U\T\C", filemtime($file))
         );
+
+        if ($size === self::SIZE_SMALL) {
+            $img = imagescale($img, imagesx($img) / 2, imagesy($img) / 2);
+        }
 
         ob_start();
         imagejpeg($img);
