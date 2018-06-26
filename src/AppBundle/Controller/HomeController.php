@@ -30,6 +30,9 @@ class HomeController extends BaseController
      */
     public function lastAction($name)
     {
+        $this->watch($name);
+        // TODO create a non-logged smallAction that throws a small image for both history and home
+
         return new Response($this->get('app.camera')->getLastImage($name), 200, [
             'Content-Type'     => 'image/jpeg',
             'Pragma-Directive' => 'no-cache',

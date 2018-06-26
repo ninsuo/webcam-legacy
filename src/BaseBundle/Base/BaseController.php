@@ -2,6 +2,7 @@
 
 namespace BaseBundle\Base;
 
+use AppBundle\Entity\Watcher;
 use BaseBundle\Traits\ServiceTrait;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Adapter\ArrayAdapter;
@@ -173,5 +174,10 @@ abstract class BaseController extends Controller
         }
 
         return $url;
+    }
+
+    protected function watch($name)
+    {
+        $this->getManager(Watcher::class)->save($this->getUser(), $name);
     }
 }
