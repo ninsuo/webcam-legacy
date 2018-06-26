@@ -11,6 +11,12 @@
             <div class="h1">{{ name }}</div>
         </div>
         <div class="col-md-6">
+            <div class="pull-right">
+                &nbsp;&nbsp;&nbsp;
+                <a id="back-to-live" href="#" class="btn btn-primary">
+                    Live
+                </a>
+            </div>
             <div
                     id="search"
                     class="pull-right form-inline"
@@ -93,6 +99,11 @@
 
         $('#search select').change(function () {
             $('#search').domAjax();
+        });
+
+        $('#back-to-live').click(function () {
+            var slider = $('#slider');
+            slider.slider('value', {{ constant('AppBundle\\Services\\Camera::SLIDER') }});
         });
 
         function renderSearchResult(elem, response) {
