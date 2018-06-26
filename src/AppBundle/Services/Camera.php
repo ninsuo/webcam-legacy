@@ -104,6 +104,26 @@ class Camera extends BaseService
         return $file;
     }
 
+    public function getImageAt($name, $tm)
+    {
+        $dir = $this->checkDirectory($name);
+        if (!$dir) {
+            return ['no' => null, 'slider' => 10000];
+        }
+
+        $no = exec(sprintf("ls -Ahop --time-style +\" %%s \"|cat -n|grep %d|cut -d ' ' -f 2|cut -d '\t' -f 1", $tm));
+        if (!$no) {
+            return [
+                'no'     => null,
+                'slider' => 10000,
+            ];
+        }
+
+        $count = trim(exec(sprintf('ls %s|grep -i jpg|wc -l', $dir)));
+        $value = intval($no * 10000 / $count);
+
+        return ['no' => $no, 'slider' => $value];
+    }
 
     private function checkDirectory($name)
     {

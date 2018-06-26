@@ -6,8 +6,10 @@ use BaseBundle\Base\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\Stream;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -25,7 +27,26 @@ class LiveController extends BaseController
         return [
             'name'     => $name,
             'archives' => $this->get('app.camera')->getArchives($name),
+            'search'   => $this->createSearchForm()->createView(),
         ];
+    }
+
+    /**
+     * @Route("/search/{name}", name="search")
+     * @Template()
+     */
+    public function searchAction(Request $request, $name)
+    {
+        $form = $this->createSearchForm()->handleRequest($request);
+
+        $tm = time() - 1;
+        if ($form->isValid()) {
+            $tm = $form->getData()['time'];
+        }
+
+        return new JsonResponse(
+            $this->get('app.camera')->getImageAt($name, strtotime(date("Y-m-d")) + $tm)
+        );
     }
 
     /**
@@ -66,5 +87,16 @@ class LiveController extends BaseController
         return [
             'name' => $name,
         ];
+    }
+
+    private function createSearchForm()
+    {
+        return $this->createFormBuilder(['time' => time()])
+            ->add('time', TimeType::class, [
+                'input'         => 'timestamp',
+                'view_timezone' => 'UTC',
+                'with_seconds'  => true,
+            ])
+            ->getForm();
     }
 }

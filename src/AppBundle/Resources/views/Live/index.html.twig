@@ -1,13 +1,35 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
 {% block title %}{{ name }}{% endblock %}
+{% block body_title %}{% endblock %}
 
 {% block body %}
     {% import 'AppBundle::macros.html.twig' as helper %}
 
-    {{ helper.camera_html(name, false) }}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="h1">{{ name }}</div>
+        </div>
+        <div class="col-md-6">
+            <div
+                    id="search"
+                    class="pull-right form-inline"
+                    data-endpoint="{{ path('search', {name: name}) }}"
+                    data-input="#search select, #search input"
+                    data-callback-success="renderSearchResult"
+            >
+                {{ form_start(search) }}
+                {{ form_widget(search.time) }}
+                {{ form_end(search) }}
+            </div>
+        </div>
+    </div>
 
-    <div id="slider"></div>
+    <div id="live">
+        {{ helper.camera_html(name, false) }}
+
+        <div id="slider"></div>
+    </div>
 
     <hr/>
 
@@ -60,13 +82,27 @@
         });
     </script>
 
+    {# Search #}
+
+    <script type="text/javascript">
+
+        $('#search select').change(function () {
+            $('#search').domAjax();
+        });
+
+        function renderSearchResult(elem, response) {
+            $('#slider').slider('value', response.slider);
+        }
+
+    </script>
+
     {# Activity #}
 
     <script type="text/javascript">
 
-        setInterval(function () {
-            $('#refresh').domAjax();
-        }, 1000);
+        // setInterval(function () {
+        //     $('#refresh').domAjax();
+        // }, 1000);
 
     </script>
 
