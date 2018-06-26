@@ -25,15 +25,14 @@ class HomeController extends BaseController
     }
 
     /**
-     * @Route("/last/{name}.jpg", name="last")
+     * @Route("/last/{name}-{size}.jpg", name="last")
      * @Template()
      */
-    public function lastAction($name)
+    public function lastAction($name, $size)
     {
-        $this->watch($name);
-        // TODO create a non-logged smallAction that throws a small image for both history and home
+        $this->watch($name, $size);
 
-        return new Response($this->get('app.camera')->getLastImage($name), 200, [
+        return new Response($this->get('app.camera')->getLastImage($name, $size), 200, [
             'Content-Type'     => 'image/jpeg',
             'Pragma-Directive' => 'no-cache',
             'Cache-Directive'  => 'no-cache',

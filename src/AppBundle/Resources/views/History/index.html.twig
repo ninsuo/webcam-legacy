@@ -15,6 +15,7 @@
                     Live
                 </a>
             </div>
+            `
         </div>
     </div>
 
@@ -24,8 +25,8 @@
 
         {% for data in pager.currentPageResults %}
             <div class="col-md-2">
-                <a href="{{ path('file', {name: name, file: data.file}) }}" target="_blank">
-                    <img src="{{ path('file', {name: name, file: data.file}) }}" class="img-responsive"/>
+                <a href="{{ path('file', {name: name, file: data.file, size: constant('AppBundle\\Services\\Camera::SIZE_LARGE') }) }}" target="_blank">
+                    <img src="{{ path('file', {name: name, file: data.file, size: constant('AppBundle\\Services\\Camera::SIZE_SMALL') }) }}" class="img-responsive"/>
                     {{ data.time|date('H:i:s') }}
                 </a>
             </div>

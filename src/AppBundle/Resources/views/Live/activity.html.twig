@@ -1,0 +1,26 @@
+{% import 'BaseBundle::macros.html.twig' as macros %}
+
+<div class="center">
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>User</th>
+            <th>Activity</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for activity in activities %}
+            <tr>
+                <td>{{ macros.user(activity.user) }}</td>
+                {% if (time() - activity.tm) < 5 %}
+                    <td><span class="text-danger">Currently watching</span></td>
+                {% else %}
+                    <td>Last watch {{ (time() - activity.tm)|ago }} ago</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>

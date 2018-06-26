@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Watcher;
 use BaseBundle\Base\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -50,12 +51,14 @@ class LiveController extends BaseController
     }
 
     /**
-     * @Route("/history/{name}.jpg", name="history")
+     * @Route("/history/{name}-{size}.jpg", name="history")
      * @Template()
      */
-    public function historyAction(Request $request, $name)
+    public function historyAction(Request $request, $name, $size)
     {
-        return new Response($this->get('app.camera')->getImageByNumber($name, $request->query->get('val')), 200, [
+        $this->watch($name, $size);
+
+        return new Response($this->get('app.camera')->getImageByNumber($name, $request->query->get('val'), $size), 200, [
             'Content-Type'     => 'image/jpeg',
             'Pragma-Directive' => 'no-cache',
             'Cache-Directive'  => 'no-cache',
@@ -79,13 +82,13 @@ class LiveController extends BaseController
     }
 
     /**
-     * @Route("/refresh/{name}", name="refresh")
+     * @Route("/activity/{name}", name="activity")
      * @Template()
      */
-    public function refreshAction($name)
+    public function activityAction($name)
     {
         return [
-            'name' => $name,
+            'activities' => $this->getManager(Watcher::class)->getActivity($name),
         ];
     }
 

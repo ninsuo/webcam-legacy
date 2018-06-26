@@ -4,7 +4,6 @@
 {% block body_title %}{% endblock %}
 
 {% block body %}
-    {% import 'AppBundle::macros.html.twig' as helper %}
 
     <div class="row">
         <div class="col-md-6">
@@ -36,7 +35,14 @@
     </div>
 
     <div id="live">
-        {{ helper.camera_html(name, false) }}
+
+        <div class="text-center">
+            <img
+                    class="live img-responsive"
+                    data-src="{{ path('last', {name: name, size: constant('AppBundle\\Services\\Camera::SIZE_LARGE')}) }}"
+                    src="{{ path('last', {name: name, size: constant('AppBundle\\Services\\Camera::SIZE_LARGE')}) }}"
+            />
+        </div>
 
         <div id="slider"></div>
     </div>
@@ -66,8 +72,8 @@
 
     <h3>Activity</h3>
 
-    <div id="refresh" data-endpoint="{{ path('refresh', {name: name}) }}" data-output="refresh">
-        {{ render(controller('AppBundle:Live:refresh', {name: name})) }}
+    <div id="activity" data-endpoint="{{ path('activity', {name: name}) }}" data-output="">
+        {{ render(controller('AppBundle:Live:activity', {name: name})) }}
     </div>
 
 {% endblock %}
@@ -92,7 +98,7 @@
         });
 
         function renderHistory(value) {
-            $('.live').attr('src', '{{ path('history', {name: name}) }}?tm=' + (Date.now() / 1000 | 0) + '&val=' + value);
+            $('.live').attr('src', '{{ path('history', {name: name, size: constant('AppBundle\\Services\\Camera::SIZE_LARGE')}) }}?tm=' + (Date.now() / 1000 | 0) + '&val=' + value);
         }
 
     </script>
@@ -122,9 +128,9 @@
 
     <script type="text/javascript">
 
-        // setInterval(function () {
-        //     $('#refresh').domAjax();
-        // }, 1000);
+        setInterval(function () {
+            $('#activity').domAjax();
+        }, 1000);
 
     </script>
 

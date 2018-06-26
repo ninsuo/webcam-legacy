@@ -6,9 +6,6 @@ use AppBundle\Entity\Watcher;
 use BaseBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
-/**
- * WatcherRepository.
- */
 class WatcherRepository extends EntityRepository
 {
     public function save(User $user, $name)
@@ -23,5 +20,10 @@ class WatcherRepository extends EntityRepository
 
         $this->_em->persist($entity);
         $this->_em->flush($entity);
+    }
+
+    public function getActivity($camera)
+    {
+        return $this->findByCamera($camera, ['tm' => 'DESC']);
     }
 }
