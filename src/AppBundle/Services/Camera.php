@@ -111,7 +111,7 @@ class Camera extends BaseService
             return ['no' => null, 'slider' => 10000];
         }
 
-        $exec = sprintf("ls -Ahop --time-style +\" %%s \"|cat -n|grep %d|cut -d ' ' -f 2|cut -d '\t' -f 1", $tm);
+        $exec = sprintf("ls -Ahop --time-style +\" %%s \" %s|cat -n|grep %d|cut -d ' ' -f 2|cut -d '\t' -f 1", $dir, $tm);
         $no   = exec($exec);
         if (!$no) {
             return [
