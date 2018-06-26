@@ -72,7 +72,7 @@ class OAuthUserProvider extends BaseUserProvider implements ContainerAwareInterf
             $user->setContact($response->getEmail());
             $user->setPicture($response->getProfilePicture());
             $user->setSigninCount(1);
-            $user->setIsEnabled($this->getParameter('user_auto_enabled'));
+            $user->setIsEnabled(false);
             $user->setIsAdmin(false);
             $this->em->persist($user);
             $this->em->flush($user);

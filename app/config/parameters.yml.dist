@@ -58,9 +58,6 @@ parameters:
     # User can only join if he has an email that matches the following regex (ex: '!@example\.org$!')
     user_email_restriction: ~
 
-    # User are automatically enabled (true) / an admin need to manually enable them after registration (false)
-    user_auto_enabled: true
-
     # Admin can edit user information (true) / User information are updated from provider at login
     user_info_auto_update: true
 
