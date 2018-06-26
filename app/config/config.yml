@@ -43,7 +43,6 @@ twig:
                 author: "%site_author%"
             supported_locales: "%supported_locales%"
             user:
-                allow_update: "%accounts_updatable%"
                 allow_remove: "%accounts_removable%"
 
 # Assetic Configuration

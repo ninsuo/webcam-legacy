@@ -37,22 +37,8 @@
     <ul class="nav navbar-nav navbar-right">
         {% if is_granted('ROLE_USER') %}
             {% block logged_in %}
-                {% if fuz.user.allow_update %}
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                           aria-expanded="false">&nbsp;&nbsp;&nbsp;{{ macros.me() }} <span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li {% if app.request.pathInfo == path('profile') %}class="active"{% endif %}>
-                                <a href="{{ path('profile') }}">{{ 'base.profile.title' | trans }}</a>
-                            </li>
-                            <li class="divider"></li>
-                            <li><a href="{{ path('logout') }}">{{ 'base.logout.title' | trans }}</a></li>
-                        </ul>
-                    </li>
-                {% else %}
-                    <p class="navbar-text">&nbsp;&nbsp;&nbsp;{{ 'base.login.as' | trans }} {{ macros.me() }}</p>
-                    <li><a href="{{ path('logout') }}">{{ 'base.logout.title' | trans }}</a></li>
-                {% endif %}
+                <p class="navbar-text">&nbsp;&nbsp;&nbsp;{{ 'base.login.as' | trans }} {{ macros.me() }}</p>
+                <li><a href="{{ path('logout') }}">{{ 'base.logout.title' | trans }}</a></li>
             {% endblock %}
         {% else %}
             {% block logged_out %}

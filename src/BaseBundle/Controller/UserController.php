@@ -6,7 +6,6 @@ use BaseBundle\Base\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,56 +70,6 @@ class UserController extends BaseController
     }
 
     /**
-     * User's profile update
-     *
-     * Take care, this option is incompatible with user_info_auto_update = true
-     *
-     * @Route("/profile", name="profile")
-     * @Security("has_role('ROLE_USER')")
-     * @Template()
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse|Response
-     */
-    public function profileAction(Request $request)
-    {
-        if (!$this->getParameter('accounts_updatable')) {
-            throw $this->createNotFoundException();
-        }
-
-        $form = $this->createFormBuilder($this->getUser())
-            ->add('nickname', Type\TextType::class, [
-                'label' => 'base.profile.nickname',
-            ])
-            ->add('contact', Type\EmailType::class, [
-                'label' => 'base.profile.contact',
-            ])
-            ->add('picture', Type\UrlType::class, [
-                'label' => 'base.profile.picture',
-            ])
-            ->add('submit', Type\SubmitType::class, [
-                'label' => 'base.button.submit',
-            ])
-            ->getForm()
-            ->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getManager()->persist($this->getUser());
-            $this->getManager()->flush($this->getUser());
-
-            $this->success('base.profile.updated');
-
-            return $this->redirectToRoute('profile');
-        }
-
-        return [
-            'data' => $this->getUser(),
-            'form' => $form->createView(),
-        ];
-    }
-
-    /**
      * User unsubscription confirmation.
      *
      * @Route("/unsubscribe", name="unsubscribe")
@@ -151,7 +100,7 @@ class UserController extends BaseController
             $form->handleRequest($request);
             if ($form->isValid()) {
                 $user = $this->getUser();
-                $em = $this->get('doctrine.orm.entity_manager');
+                $em   = $this->get('doctrine.orm.entity_manager');
                 $em->remove($user);
                 $em->flush($user);
 
