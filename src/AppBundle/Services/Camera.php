@@ -74,7 +74,7 @@ class Camera extends BaseService
     {
         $img = imagecreatefromjpeg($file);
         imagettftext(
-            $img, 28, 0, 840, 700,
+            $img, 28, 0, 835, 700,
             imagecolorallocate($img, 255, 255, 0),
             __DIR__.'/../Resources/fonts/Lato/Lato-Regular.ttf',
             date("d/m/Y H:i:s \U\T\C", filemtime($file))
