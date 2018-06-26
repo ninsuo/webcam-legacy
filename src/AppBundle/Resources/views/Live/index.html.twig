@@ -77,9 +77,14 @@
             max: {{ constant('AppBundle\\Services\\Camera::SLIDER') }},
             value: {{ constant('AppBundle\\Services\\Camera::SLIDER') }},
             slide: function (event, ui) {
-                $('.live').attr('src', '{{ path('history', {name: name}) }}?tm=' + (Date.now() / 1000 | 0) + '&val=' + ui.value);
+                renderHistory(ui.value);
             }
         });
+
+        function renderHistory(value) {
+            $('.live').attr('src', '{{ path('history', {name: name}) }}?tm=' + (Date.now() / 1000 | 0) + '&val=' + value);
+        }
+
     </script>
 
     {# Search #}
@@ -93,7 +98,7 @@
         function renderSearchResult(elem, response) {
             var slider = $('#slider');
             slider.slider('value', response.slider);
-            slider.slider('option', 'slide').call(slider);
+            renderHistory(response.slider);
         }
 
     </script>
