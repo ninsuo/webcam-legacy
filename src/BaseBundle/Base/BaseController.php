@@ -18,8 +18,8 @@ abstract class BaseController extends Controller
 {
     use ServiceTrait;
 
-    const PAGER_PER_PAGE_LIST    = '25,50,100';
-    const PAGER_PER_PAGE_DEFAULT = 25;
+    const PAGER_PER_PAGE_LIST    = '60,120,300';
+    const PAGER_PER_PAGE_DEFAULT = 60;
 
     public function info($message, array $parameters = [])
     {
@@ -51,7 +51,12 @@ abstract class BaseController extends Controller
         return $this->container->get('form.factory')->createNamedBuilder($name, $type, $data, $options);
     }
 
-    public function orderBy(QueryBuilder $qb, $class, $prefixedDefaultColumn, $defaultDirection = 'ASC', $prefix = '', $hash = null)
+    public function orderBy(QueryBuilder $qb,
+        $class,
+        $prefixedDefaultColumn,
+        $defaultDirection = 'ASC',
+        $prefix = '',
+        $hash = null)
     {
         $request = $this->get('request_stack')->getMasterRequest();
 
@@ -161,7 +166,7 @@ abstract class BaseController extends Controller
             }
 
             // URL starts by the same host
-            $baseUrl = $request->getScheme() . '://' . $request->getHost() . (($request->getPort() != 80 && $request->getPort() != 443) ? ':' . $request->getPort() : '') . '/';
+            $baseUrl = $request->getScheme().'://'.$request->getHost().(($request->getPort() != 80 && $request->getPort() != 443) ? ':'.$request->getPort() : '').'/';
             if (strncmp($referer, $baseUrl, strlen($baseUrl)) === 0) {
                 return $referer;
             }

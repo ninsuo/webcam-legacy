@@ -55,7 +55,7 @@ class LiveController extends BaseController
      */
     public function historyAction(Request $request, $name)
     {
-        return new Response($this->get('app.camera')->getImage($name, $request->query->get('val')), 200, [
+        return new Response($this->get('app.camera')->getImageByNumber($name, $request->query->get('val')), 200, [
             'Content-Type'     => 'image/jpeg',
             'Pragma-Directive' => 'no-cache',
             'Cache-Directive'  => 'no-cache',

@@ -27,7 +27,7 @@ class Camera extends BaseService
         return $cameras;
     }
 
-    public function getImage($name, $value)
+    public function getImageByNumber($name, $value)
     {
         $dir = $this->checkDirectory($name);
         if (is_null($dir)) {
@@ -37,6 +37,20 @@ class Camera extends BaseService
         $count = trim(exec(sprintf('ls %s|grep -i jpg|wc -l', $dir)));
         $no    = intval($count * $value / self::SLIDER);
         $file  = exec(sprintf("ls %s|cat -n|grep '%d\t'|cut -d ' ' -f 2|cut -d '\t' -f 2", $dir, $no));
+
+        return $this->timestampize(sprintf('%s/%s', $dir, $file));
+    }
+
+    public function getImageByFilename($name, $file)
+    {
+        $dir = $this->checkDirectory($name);
+        if (is_null($dir)) {
+            return $this->createErrorImage();
+        }
+
+        if (!preg_match('/^[0-9a-zA-Z\.\-_]+\.jpg$/', $file)) {
+            return $this->createErrorImage();
+        }
 
         return $this->timestampize(sprintf('%s/%s', $dir, $file));
     }
@@ -97,7 +111,7 @@ class Camera extends BaseService
             throw new NotFoundHttpException();
         }
 
-        if (!preg_match('/^[0-9a-zA-Z\.\-_]+$/', $filename)) {
+        if (!preg_match('/^[0-9a-zA-Z\.\-_]+\.tar\.gz$/', $filename)) {
             throw new NotFoundHttpException();
         }
 
@@ -121,17 +135,31 @@ class Camera extends BaseService
         $exec = sprintf("ls -Ahop --time-style +\" %%s \" %s|cat -n|grep %d|cut -d ' ' -f 2|cut -d '\t' -f 1", $dir, $tm);
         $no   = exec($exec);
         if (!$no) {
-            return [
-                'exec'   => $exec,
-                'no'     => null,
-                'slider' => self::SLIDER,
-            ];
+            return ['no' => null, 'slider' => self::SLIDER];
         }
 
         $count = trim(exec(sprintf('ls %s|grep -i jpg|wc -l', $dir)));
         $value = intval($no * self::SLIDER / $count);
 
         return ['no' => $no, 'slider' => $value];
+    }
+
+    public function listImages($name)
+    {
+        $dir = $this->checkDirectory($name);
+        if (is_null($dir)) {
+            throw new NotFoundHttpException();
+        }
+
+        $data = [];
+        foreach (array_map('basename', glob(sprintf('%s/*.jpg', $dir))) as $file) {
+            $data[] = [
+                'file' => $file,
+                'time' => filemtime(sprintf('%s/%s', $dir, $file)),
+            ];
+        }
+
+        return array_reverse($data);
     }
 
     private function checkDirectory($name)

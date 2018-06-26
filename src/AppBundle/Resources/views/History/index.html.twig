@@ -1,0 +1,41 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block title %}{{ name }}'s history{% endblock %}
+{% block body_title %}{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="h1">{{ name }}'s history</div>
+        </div>
+        <div class="col-md-6">
+            <div class="pull-right">
+                <a href="{{ path('live', {name: name}) }}" class="btn btn-primary">
+                    Live
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% import 'BaseBundle::macros.html.twig' as macros %}
+
+    <div class="row text-center">
+
+        {% for data in pager.currentPageResults %}
+            <div class="col-md-2">
+                <a href="{{ path('file', {name: name, file: data.file}) }}" target="_blank">
+                    <img src="{{ path('file', {name: name, file: data.file}) }}" class="img-responsive"/>
+                    {{ data.time|date('H:i:s') }}
+                </a>
+            </div>
+        {% endfor %}
+
+    </div>
+
+    {{ macros.pager(pager) }}
+
+{% endblock %}
+
+{% block script %}
+{% endblock %}

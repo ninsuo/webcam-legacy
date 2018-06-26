@@ -1,6 +1,6 @@
 {% extends 'AppBundle::layout.html.twig' %}
 
-{% block title %}{{ name }}{% endblock %}
+{% block title %}{{ name }}'s live{% endblock %}
 {% block body_title %}{% endblock %}
 
 {% block body %}
@@ -8,13 +8,17 @@
 
     <div class="row">
         <div class="col-md-6">
-            <div class="h1">{{ name }}</div>
+            <div class="h1">{{ name }}'s live</div>
         </div>
         <div class="col-md-6">
             <div class="pull-right">
                 &nbsp;&nbsp;&nbsp;
                 <a id="back-to-live" href="#" class="btn btn-primary">
                     Live
+                </a>
+                &nbsp;&nbsp;&nbsp;
+                <a href="{{ path('reader', {name: name}) }}" class="btn btn-default">
+                    History
                 </a>
             </div>
             <div
