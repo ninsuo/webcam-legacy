@@ -38,8 +38,9 @@ class Camera extends BaseService
         }
 
         $count = trim(exec(sprintf('ls %s|grep -i jpg|wc -l', $dir)));
-        $no    = intval($count * $value / self::SLIDER);
-        $file  = exec(sprintf("ls %s|cat -n|grep '%d\t'|cut -d ' ' -f 2|cut -d '\t' -f 2", $dir, $no));
+        $no    = intval($count * $value / self::SLIDER) + 1;
+        $exec  = sprintf("ls %s|grep -i jpg|cat -n|grep '^ %d\t'|cut -d ' ' -f 2|cut -d '\t' -f 2", $dir, $no);
+        $file  = exec($exec);
 
         return $this->timestampize(sprintf('%s/%s', $dir, $file), $size);
     }
