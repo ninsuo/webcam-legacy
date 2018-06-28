@@ -37,9 +37,9 @@ class Camera extends BaseService
             return $this->createErrorImage();
         }
 
-        $count = trim(exec(sprintf('ls %s|grep -i jpg|wc -l', $dir)));
+        $count = trim(exec(sprintf('ls -t %s|grep -i jpg|wc -l', $dir)));
         $no    = intval($count * $value / self::SLIDER) + 1;
-        $exec  = sprintf("ls %s|grep -i jpg|cat -n|egrep '^[ ]+%d\t'", $dir, $no);
+        $exec  = sprintf("ls -t %s|grep -i jpg|cat -n|egrep '^[ ]+%d\t'", $dir, $no);
         $file  = trim(exec($exec));
 
         if (!$file) {
@@ -70,7 +70,7 @@ class Camera extends BaseService
             return $this->createErrorImage();
         }
 
-        $file = sprintf('%s/%s', $dir, exec(sprintf('ls -r %s/|grep -i jpg|head -1', $dir)));
+        $file = sprintf('%s/%s', $dir, exec(sprintf('ls -tr %s/|grep -i jpg|head -1', $dir)));
         if (!is_readable($file)) {
             return $this->createErrorImage();
         }
@@ -144,13 +144,13 @@ class Camera extends BaseService
             return ['no' => null, 'slider' => self::SLIDER];
         }
 
-        $exec = sprintf("ls -Ahop --time-style +\" %%s \" %s|cat -n|grep %d|cut -d ' ' -f 2|cut -d '\t' -f 1", $dir, $tm);
+        $exec = sprintf("ls -Ahopt --time-style +\" %%s \" %s|cat -n|grep %d|cut -d ' ' -f 2|cut -d '\t' -f 1", $dir, $tm);
         $no   = exec($exec);
         if (!$no) {
             return ['no' => null, 'slider' => self::SLIDER];
         }
 
-        $count = trim(exec(sprintf('ls %s|grep -i jpg|wc -l', $dir)));
+        $count = trim(exec(sprintf('ls -t %s|grep -i jpg|wc -l', $dir)));
         $value = intval($no * self::SLIDER / $count);
 
         return ['no' => $no, 'slider' => $value];
