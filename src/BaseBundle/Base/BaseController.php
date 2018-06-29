@@ -177,7 +177,7 @@ abstract class BaseController extends Controller
         return $url;
     }
 
-    protected function watch($name, &$size)
+    protected function watch($name, $size)
     {
         if (!in_array($size, [Camera::SIZE_SMALL, Camera::SIZE_LARGE])) {
             throw $this->createNotFoundException();

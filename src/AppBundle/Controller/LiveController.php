@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Watcher;
+use AppBundle\Services\Camera;
 use BaseBundle\Base\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -87,6 +88,8 @@ class LiveController extends BaseController
      */
     public function activityAction($name)
     {
+        $this->watch($name, Camera::SIZE_LARGE);
+
         return [
             'activities' => $this->getManager(Watcher::class)->getActivity($name),
         ];
