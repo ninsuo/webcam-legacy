@@ -12,6 +12,12 @@ class Camera extends BaseService
     const SIZE_SMALL = 'small';
     const SIZE_LARGE = 'large';
 
+    const DEFAULT_WIDTH     = 1280;
+    const DEFAULT_HEIGHT    = 720;
+    const DEFAULT_TIME_SIZE = 28;
+    const DEFAULT_TIME_X    = 835;
+    const DEFAULT_TIME_Y    = 700;
+
     public function __construct()
     {
         date_default_timezone_set('UTC');
@@ -39,7 +45,7 @@ class Camera extends BaseService
 
         $count = trim(exec(sprintf('ls -t %s|grep -i jpg|wc -l', $dir)));
         $no    = intval($count * $value / self::SLIDER) + 1;
-        $exec  = sprintf("ls -t %s|grep -i jpg|cat -n|egrep '^[ ]+%d\t'", $dir, $no);
+        $exec  = sprintf("ls -tr %s|grep -i jpg|cat -n|egrep '^[ ]+%d\t'", $dir, $no);
         $file  = trim(exec($exec));
 
         if (!$file) {
@@ -70,7 +76,7 @@ class Camera extends BaseService
             return $this->createErrorImage();
         }
 
-        $file = sprintf('%s/%s', $dir, exec(sprintf('ls -tr %s/|grep -i jpg|head -1', $dir)));
+        $file = sprintf('%s/%s', $dir, exec(sprintf('ls -t %s/|grep -i jpg|head -1', $dir)));
         if (!is_readable($file)) {
             return $this->createErrorImage();
         }

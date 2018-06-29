@@ -99,6 +99,7 @@ class LiveController extends BaseController
                 'input'         => 'timestamp',
                 'view_timezone' => 'UTC',
                 'with_seconds'  => true,
+                'widget'        => 'single_text',
             ])
             ->getForm();
     }

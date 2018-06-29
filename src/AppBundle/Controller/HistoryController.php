@@ -6,6 +6,9 @@ use BaseBundle\Base\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -19,6 +22,8 @@ class HistoryController extends BaseController
      */
     public function indexAction($name)
     {
+        $filters = $this->createFilterForm();
+
         return [
             'pager' => $this->getPager($this->get('app.camera')->listImages($name)),
             'name'  => $name,
@@ -39,5 +44,24 @@ class HistoryController extends BaseController
             'Pragma'           => 'no-cache',
             'Expires'          => '0',
         ]);
+    }
+
+    private function createFilterForm(): FormInterface
+    {
+        return $this->createFormBuilder()
+            ->add('from', TimeType::class, [
+                'input'         => 'timestamp',
+                'view_timezone' => 'UTC',
+                'with_seconds'  => true,
+                'widget'        => 'single_text',
+            ])
+            ->add('to', TimeType::class, [
+                'input'         => 'timestamp',
+                'view_timezone' => 'UTC',
+                'with_seconds'  => true,
+                'widget'        => 'single_text',
+            ])
+            ->add('step', NumberType::class)
+            ->getForm();
     }
 }
