@@ -62,7 +62,7 @@ class Camera extends BaseService
             return $this->createErrorImage();
         }
 
-        if (!preg_match('/^[0-9a-zA-Z\.\-_]+\.jpg$/', $file)) {
+        if (!preg_match('/^[0-9a-zA-Z\.\-_\(\)]+\.jpg$/', $file)) {
             return $this->createErrorImage();
         }
 
@@ -86,9 +86,13 @@ class Camera extends BaseService
 
     public function timestampize($file, $size)
     {
-        $img = imagecreatefromjpeg($file);
+        $img = @imagecreatefromjpeg($file);
+
+        $ratioX = imagesx($img) / self::DEFAULT_WIDTH;
+        $ratioY = imagesy($img) / self::DEFAULT_HEIGHT;
+
         imagettftext(
-            $img, 28, 0, 835, 700,
+            $img, $ratioX * self::DEFAULT_TIME_SIZE, 0, $ratioX * self::DEFAULT_TIME_X, $ratioY * self::DEFAULT_TIME_Y,
             imagecolorallocate($img, 255, 255, 0),
             __DIR__.'/../Resources/fonts/Lato/Lato-Regular.ttf',
             date("d/m/Y H:i:s \U\T\C", filemtime($file))
@@ -182,7 +186,7 @@ class Camera extends BaseService
 
     private function checkDirectory($name)
     {
-        if (!preg_match('/^[0-9a-zA-Z]+$/', $name)) {
+        if (!preg_match('/^[0-9a-zA-Z\-_\(\)]+$/', $name)) {
             return null;
         }
 
@@ -196,7 +200,7 @@ class Camera extends BaseService
 
     private function createErrorImage()
     {
-        $img = imagecreate(1280, 720);
+        $img = imagecreate(self::DEFAULT_WIDTH, self::DEFAULT_HEIGHT);
         ob_start();
         imagejpeg($img);
 
