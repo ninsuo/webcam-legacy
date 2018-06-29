@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\File\Stream;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Time;
 
 /**
  * @Security("has_role('ROLE_USER')")
@@ -103,6 +105,10 @@ class LiveController extends BaseController
                 'view_timezone' => 'UTC',
                 'with_seconds'  => true,
                 'widget'        => 'single_text',
+                'constraints'   => [
+                    new NotBlank(),
+                    new Time(),
+                ],
             ])
             ->getForm();
     }

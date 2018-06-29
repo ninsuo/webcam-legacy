@@ -10,14 +10,35 @@
             <div class="h1">{{ name }}'s history</div>
         </div>
         <div class="col-md-6">
-            <div class="pull-right">
-                <a href="{{ path('live', {name: name}) }}" class="btn btn-primary">
-                    Live
-                </a>
+            <div id="filters" class="pull-right form-inline">
+                {{ form_start(filters) }}
+                <div class="row">
+                    <div class="col-md-3">
+                        From: {{ form_widget(filters.from) }}
+                    </div>
+                    <div class="col-md-3">
+                        To: {{ form_widget(filters.to) }}
+                    </div>
+                    <div class="col-md-2">
+                        Step: {{ form_widget(filters.step) }}
+                    </div>
+                    <div class="col-md-2">
+                        <br/>
+                        {{ form_widget(filters.go) }}
+                    </div>
+                    <div class="col-m2-2">
+                        <br/>
+                        <a href="{{ path('live', {name: name}) }}" class="btn btn-primary">
+                            Live
+                        </a>
+                    </div>
+                </div>
+                {{ form_end(filters) }}
             </div>
-            `
         </div>
     </div>
+
+    <br/>
 
     {% import 'BaseBundle::macros.html.twig' as macros %}
 

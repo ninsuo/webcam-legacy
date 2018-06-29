@@ -181,7 +181,11 @@ class Camera extends BaseService
             ];
         }
 
-        return array_reverse($data);
+        usort($data, function($a, $b) {
+            return $a['time'] > $b['time'] ? 1 : -1;
+        });
+
+        return $data;
     }
 
     private function checkDirectory($name)

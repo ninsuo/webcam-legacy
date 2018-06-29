@@ -6,10 +6,16 @@ use BaseBundle\Base\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Range;
+use Symfony\Component\Validator\Constraints\Time;
 
 /**
  * @Security("has_role('ROLE_USER')")
@@ -20,13 +26,19 @@ class HistoryController extends BaseController
      * @Route("/reader/{name}", name="reader")
      * @Template()
      */
-    public function indexAction($name)
+    public function indexAction(Request $request, $name)
     {
-        $filters = $this->createFilterForm();
+        $images = $this->get('app.camera')->listImages($name);
+        $filters = $this->createFilterForm($request, $images);
+
+        if ($filters->isValid()) {
+            // ...
+        }
 
         return [
-            'pager' => $this->getPager($this->get('app.camera')->listImages($name)),
+            'pager' => $this->getPager($images),
             'name'  => $name,
+            'filters' => $filters->createView(),
         ];
     }
 
@@ -46,22 +58,46 @@ class HistoryController extends BaseController
         ]);
     }
 
-    private function createFilterForm(): FormInterface
+    private function createFilterForm(Request $request, $images): FormInterface
     {
-        return $this->createFormBuilder()
+        $data = [
+            'from' => reset($images)['time'],
+            'to' => end($images)['time'],
+            'step' => 1,
+        ];
+
+        return $this->createNamedFormBuilder('filter', FormType::class, $data, ['csrf_protection' => false])
+            ->setMethod('GET')
             ->add('from', TimeType::class, [
                 'input'         => 'timestamp',
                 'view_timezone' => 'UTC',
                 'with_seconds'  => true,
                 'widget'        => 'single_text',
+                'constraints'   => [
+                    new NotBlank(),
+                    new Time(),
+                ],
             ])
             ->add('to', TimeType::class, [
                 'input'         => 'timestamp',
                 'view_timezone' => 'UTC',
                 'with_seconds'  => true,
                 'widget'        => 'single_text',
+                'constraints'   => [
+                    new NotBlank(),
+                    new Time(),
+                ],
             ])
-            ->add('step', NumberType::class)
-            ->getForm();
+            ->add('step', NumberType::class, [
+                'constraints' => [
+                    new NotBlank(),
+                    new Range(['min' => 1]),
+                ],
+            ])
+            ->add('go', SubmitType::class, [
+                'label' => 'Go',
+            ])
+            ->getForm()
+            ->handleRequest($request);
     }
 }
