@@ -161,7 +161,7 @@ class Camera extends BaseService
             return ['no' => null, 'slider' => self::SLIDER];
         }
 
-        $no    = array_search($images, $closest);
+        $no    = array_search($closest, $images);
         $value = intval($no * self::SLIDER / count($images));
 
         return ['no' => $no, 'slider' => $value];
