@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Time;
+use Symfony\Component\Validator\Constraints\Range;
 
 /**
  * @Security("has_role('ROLE_USER')")
@@ -107,7 +107,7 @@ class LiveController extends BaseController
                 'widget'        => 'single_text',
                 'constraints'   => [
                     new NotBlank(),
-                    new Time(),
+                    new Range(['min' => 0, 'max' => 86400]),
                 ],
             ])
             ->getForm();

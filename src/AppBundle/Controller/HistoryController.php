@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
-use Symfony\Component\Validator\Constraints\Time;
 
 /**
  * @Security("has_role('ROLE_USER')")
@@ -28,16 +27,30 @@ class HistoryController extends BaseController
      */
     public function indexAction(Request $request, $name)
     {
-        $images = $this->get('app.camera')->listImages($name);
+        $images  = $this->get('app.camera')->listImages($name);
         $filters = $this->createFilterForm($request, $images);
 
         if ($filters->isValid()) {
-            // ...
+            $data = $filters->getData();
+
+            $images = array_filter($images, function ($value, $key) use ($data) {
+                if ($key % $data['step'] !== 0) {
+                    return false;
+                }
+
+                if ($data['from'] > $data['to'] && $value['time'] < $data['from'] && $value['time'] > $data['to']) {
+                    return false;
+                } elseif ($data['from'] < $data['to'] && ($value['time'] < $data['from'] || $value['time'] > $data['to'])) {
+                    return false;
+                }
+
+                return true;
+            }, ARRAY_FILTER_USE_BOTH);
         }
 
         return [
-            'pager' => $this->getPager($images),
-            'name'  => $name,
+            'pager'   => $this->getPager($images),
+            'name'    => $name,
             'filters' => $filters->createView(),
         ];
     }
@@ -62,34 +75,37 @@ class HistoryController extends BaseController
     {
         $data = [
             'from' => reset($images)['time'],
-            'to' => end($images)['time'],
+            'to'   => end($images)['time'],
             'step' => 1,
         ];
 
         return $this->createNamedFormBuilder('filter', FormType::class, $data, ['csrf_protection' => false])
             ->setMethod('GET')
             ->add('from', TimeType::class, [
-                'input'         => 'timestamp',
-                'view_timezone' => 'UTC',
-                'with_seconds'  => true,
-                'widget'        => 'single_text',
-                'constraints'   => [
+                'input'          => 'timestamp',
+                'view_timezone'  => 'UTC',
+                'with_seconds'   => true,
+                'widget'         => 'single_text',
+                'error_bubbling' => true,
+                'constraints'    => [
                     new NotBlank(),
-                    new Time(),
+                    new Range(['min' => 0, 'max' => 86400]),
                 ],
             ])
             ->add('to', TimeType::class, [
-                'input'         => 'timestamp',
-                'view_timezone' => 'UTC',
-                'with_seconds'  => true,
-                'widget'        => 'single_text',
-                'constraints'   => [
+                'input'          => 'timestamp',
+                'view_timezone'  => 'UTC',
+                'with_seconds'   => true,
+                'widget'         => 'single_text',
+                'error_bubbling' => true,
+                'constraints'    => [
                     new NotBlank(),
-                    new Time(),
+                    new Range(['min' => 0, 'max' => 86400]),
                 ],
             ])
             ->add('step', NumberType::class, [
-                'constraints' => [
+                'error_bubbling' => true,
+                'constraints'    => [
                     new NotBlank(),
                     new Range(['min' => 1]),
                 ],

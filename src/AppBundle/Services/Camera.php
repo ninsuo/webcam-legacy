@@ -175,14 +175,17 @@ class Camera extends BaseService
 
         $data = [];
         foreach (array_map('basename', glob(sprintf('%s/*.jpg', $dir))) as $file) {
+            $date = filemtime(sprintf('%s/%s', $dir, $file));
+
             $data[] = [
                 'file' => $file,
-                'time' => filemtime(sprintf('%s/%s', $dir, $file)),
+                'date' => $date,
+                'time' => $date % 86400,
             ];
         }
 
-        usort($data, function($a, $b) {
-            return $a['time'] > $b['time'] ? 1 : -1;
+        usort($data, function ($a, $b) {
+            return $a['date'] > $b['date'] ? 1 : -1;
         });
 
         return $data;
