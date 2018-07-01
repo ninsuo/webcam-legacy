@@ -145,23 +145,24 @@ class Camera extends BaseService
         return $file;
     }
 
-    public function getImageAt($name, $tm)
+    public function getImageAt($name, $time)
     {
-        $tm = strtotime(date("Y-m-d")) + $tm;
+        $closest     = null;
+        $closestTime = 0xFFFFFFFF;
+        $images      = $this->listImages($name);
+        foreach ($images as $image) {
+            if (abs($image['time'] - $time) < $closestTime) {
+                $closest     = $image;
+                $closestTime = abs($image['time'] - $time);
+            }
+        }
 
-        $dir = $this->checkDirectory($name);
-        if (!$dir) {
+        if (is_null($closest)) {
             return ['no' => null, 'slider' => self::SLIDER];
         }
 
-        $exec = sprintf("ls -Ahopt --time-style +\" %%s \" %s|cat -n|grep %d|cut -d ' ' -f 2|cut -d '\t' -f 1", $dir, $tm);
-        $no   = exec($exec);
-        if (!$no) {
-            return ['no' => null, 'slider' => self::SLIDER];
-        }
-
-        $count = trim(exec(sprintf('ls -t %s|grep -i jpg|wc -l', $dir)));
-        $value = intval($no * self::SLIDER / $count);
+        $no    = array_search($images, $closest);
+        $value = intval($no * self::SLIDER / count($images));
 
         return ['no' => $no, 'slider' => $value];
     }

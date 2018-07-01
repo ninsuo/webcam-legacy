@@ -37,7 +37,6 @@ class HistoryController extends BaseController
                 if ($key % $data['step'] !== 0) {
                     return false;
                 }
-
                 if ($data['from'] > $data['to'] && $value['time'] < $data['from'] && $value['time'] > $data['to']) {
                     return false;
                 } elseif ($data['from'] < $data['to'] && ($value['time'] < $data['from'] || $value['time'] > $data['to'])) {

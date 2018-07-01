@@ -6,13 +6,13 @@
 {% block body %}
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="h1">{{ name }}'s live</div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-8">
             <div class="pull-right">
                 &nbsp;&nbsp;&nbsp;
-                <a id="back-to-live" href="#" class="btn btn-primary">
+                <a id="back-to-live" href="#" class="btn btn-default">
                     Live
                 </a>
                 &nbsp;&nbsp;&nbsp;
@@ -23,12 +23,22 @@
             <div
                     id="search"
                     class="pull-right form-inline"
-                    data-endpoint="{{ path('search', {name: name}) }}"
-                    data-input="#search input"
-                    data-callback-success="renderSearchResult"
             >
                 {{ form_start(search) }}
-                {{ form_widget(search.time) }}
+                <div class="row">
+                    <div class="col-md-9">
+                        {{ form_widget(search.time) }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ form_widget(search.go, {
+                            'attr': {
+                                'class': 'domajax',
+                                'data-endpoint': path('search', {name: name}),
+                                'data-callback-success': 'renderSearchResult',
+                            }
+                        }) }}
+                    </div>
+                </div>
                 {{ form_end(search) }}
             </div>
         </div>
@@ -128,9 +138,9 @@
 
     <script type="text/javascript">
 
-        setInterval(function () {
-            $('#activity').domAjax();
-        }, 1000);
+        // setInterval(function () {
+        //     $('#activity').domAjax();
+        // }, 1000);
 
     </script>
 

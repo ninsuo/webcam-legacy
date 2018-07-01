@@ -8,6 +8,7 @@ use BaseBundle\Base\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\Stream;
@@ -49,7 +50,7 @@ class LiveController extends BaseController
         }
 
         return new JsonResponse(
-            $this->get('app.camera')->getImageAt($name, $tm)
+            $this->get('app.camera')->getImageAt($name, $tm % 86400)
         );
     }
 
@@ -109,6 +110,9 @@ class LiveController extends BaseController
                     new NotBlank(),
                     new Range(['min' => 0, 'max' => 86400]),
                 ],
+            ])
+            ->add('go', SubmitType::class, [
+                'label' => 'Go',
             ])
             ->getForm();
     }
