@@ -22,6 +22,7 @@ security:
                 login_path: "/connect/google"
                 failure_path: "/login"
                 default_target_path: "/welcome"
+                always_use_default_target_path: true
                 oauth_user_provider:
                     service: "base.oauth_user_provider"
 
