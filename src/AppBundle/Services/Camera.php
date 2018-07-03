@@ -88,6 +88,10 @@ class Camera extends BaseService
     {
         $img = @imagecreatefromjpeg($file);
 
+        if (!$img) {
+            return $this->createErrorImage();
+        }
+
         $ratioX = imagesx($img) / self::DEFAULT_WIDTH;
         $ratioY = imagesy($img) / self::DEFAULT_HEIGHT;
 
