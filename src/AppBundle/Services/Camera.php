@@ -86,7 +86,7 @@ class Camera extends BaseService
 
     public function timestampize($file, $size)
     {
-        if (!$file || !is_readable($file)) {
+        if (!$file || !is_file($file) || !is_readable($file)) {
             return $this->createErrorImage();
         }
 
