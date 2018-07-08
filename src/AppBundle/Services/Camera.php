@@ -27,7 +27,7 @@ class Camera extends BaseService
     {
         $cameras = [];
 
-        foreach (glob($this->getParameter('webcam_path').'/*') as $name) {
+        foreach (glob($this->getParameter('webcam_path') . '/*') as $name) {
             if (is_dir($name)) {
                 $cameras[] = basename($name);
             }
@@ -76,7 +76,7 @@ class Camera extends BaseService
             return $this->createErrorImage();
         }
 
-        $file = sprintf('%s/%s', $dir, exec(sprintf('ls -t %s/|grep -i jpg|head -1', $dir)));
+        $file = sprintf('%s/%s', $dir, exec(sprintf('ls -t %s/|grep -i jpg|head -2|tac|head -1', $dir)));
         if (!is_readable($file)) {
             return $this->createErrorImage();
         }
@@ -102,7 +102,7 @@ class Camera extends BaseService
         imagettftext(
             $img, $ratioX * self::DEFAULT_TIME_SIZE, 0, $ratioX * self::DEFAULT_TIME_X, $ratioY * self::DEFAULT_TIME_Y,
             imagecolorallocate($img, 255, 255, 0),
-            __DIR__.'/../Resources/fonts/Lato/Lato-Regular.ttf',
+            __DIR__ . '/../Resources/fonts/Lato/Lato-Regular.ttf',
             date("d/m/Y H:i:s \U\T\C", filemtime($file))
         );
 
