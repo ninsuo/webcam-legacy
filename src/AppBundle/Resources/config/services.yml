@@ -7,3 +7,5 @@ services:
   app.camera:
     class: '%app.camera.class%'
     parent: base.service
+    calls:
+      - ['setRightTimezone', []]
