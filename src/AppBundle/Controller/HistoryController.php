@@ -2,7 +2,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Services\Camera;
 use BaseBundle\Base\BaseController;
+use PhpZip\ZipFile;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -87,6 +90,41 @@ class HistoryController extends BaseController
             'next' => $next,
         ];
     }
+
+    /**
+     * @Route("/download/{name}", name="download")
+     * @Method("POST")
+     * @Template()
+     */
+    public function downloadAction(Request $request, $name)
+    {
+        $this->watch($name, Camera::SIZE_LARGE);
+
+        $files = json_decode($request->request->get('files'), true);
+        if ($files === false) {
+            throw $this->createNotFoundException();
+        }
+
+        $zip = new ZipFile();
+        foreach ($files as $file) {
+            $path = sprintf('%s/%s/%s', $this->getParameter('webcam_path'), $name, $file);
+            if (!is_file($path)) {
+                continue ;
+            }
+
+            $zip->addFile($path, $file);
+        }
+
+        return new Response($zip->outputAsString(), 200, [
+            'Content-Type'        => 'application/zip',
+            'Content-Disposition' => sprintf('attachment;filename=download-%s.zip', date('Y-m-d')),
+            'Pragma-Directive'    => 'no-cache',
+            'Cache-Directive'     => 'no-cache',
+            'Cache-Control'       => 'no-cache',
+            'Pragma'              => 'no-cache',
+            'Expires'             => '0',
+        ]);
+   }
 
     private function createFilterForm(Request $request, $images): FormInterface
     {

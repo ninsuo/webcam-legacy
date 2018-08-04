@@ -15,7 +15,7 @@ class Camera extends BaseService
     const DEFAULT_WIDTH     = 1280;
     const DEFAULT_HEIGHT    = 720;
     const DEFAULT_TIME_SIZE = 28;
-    const DEFAULT_TIME_X    = 920;
+    const DEFAULT_TIME_X    = 910;
     const DEFAULT_TIME_Y    = 700;
 
     public function setRightTimezone()

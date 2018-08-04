@@ -44,15 +44,27 @@
 
     <div class="row text-center">
 
-        {% for data in pager.currentPageResults %}
+        {% for key, data in pager.currentPageResults %}
             <div class="col-md-2">
                 <a href="{{ path('details', {name: name, file: data.file}|merge(app.request.query.all)) }}">
                     <img src="{{ path('file', {name: name, file: data.file, size: constant('AppBundle\\Services\\Camera::SIZE_SMALL')}) }}" class="img-responsive"/>
-                    {{ data.time|date('H:i:s') }}
                 </a>
+                <label for="result-{{ key }}">
+                    {{ data.time|date('H:i:s') }}
+                </label>
+                <input data-file="{{ data.file }}" type="checkbox" id="result-{{ key }}" class="downloadable" />
             </div>
         {% endfor %}
 
+    </div>
+
+    <div class="text-center" style="padding:5px;">
+        <div id="selection"></div>
+        <a class="btn btn-primary hidden" id="download-now" href="#">Download selection</a>
+        <form id="download-form" action="{{ path('download', {name: name}) }}" method="post">
+            <input type="hidden" name="files" id="download-files" value=""/>
+        </form>
+        <br/>
     </div>
 
     {{ macros.pager(pager) }}
@@ -60,4 +72,72 @@
 {% endblock %}
 
 {% block script %}
+
+    <script type="text/javascript">
+
+        $('.downloadable').click(function() {
+            var download = restoreDownloads();
+            var that = $(this);
+            var file = that.data('file');
+            if (that.is(':checked') && download.indexOf(file) === -1) {
+                download.push(file);
+            } else {
+                var index = download.indexOf(file);
+                if (index !== -1) {
+                    download.splice(index, 1);
+                }
+            }
+            localStorage.setItem('download', JSON.stringify(download));
+            renderSelection();
+        });
+
+        var list = restoreDownloads();
+        $('.downloadable').each(function() {
+            var that = $(this);
+            if (list.indexOf(that.data('file')) !== -1) {
+                that.attr('checked', 'checked');
+            } else {
+                that.removeAttr('checked');
+            }
+        });
+
+        function restoreDownloads() {
+            var download = localStorage.getItem('download');
+            if (typeof download !== 'string') {
+                download = [];
+            } else {
+                download = JSON.parse(download);
+            }
+
+            return download;
+        }
+
+        function renderSelection() {
+            $('#selection').html('');
+
+            var download = restoreDownloads();
+            $.each(download, function(key, value) {
+                $('#selection').append(
+                    $('<div/>').text(value)
+                );
+            });
+
+            if (download.length > 0) {
+                $('#download-now').removeClass('hidden');
+            } else {
+                $('#download-now').addClass('hidden');
+            }
+        }
+        renderSelection();
+
+        $('#download-now').click(function(e) {
+            $('#download-files').val(JSON.stringify(restoreDownloads()))
+            localStorage.setItem('download', '[]');
+            $('#download-form').submit();
+            renderSelection();
+            e.preventDefault();
+        });
+
+    </script>
+
 {% endblock %}
