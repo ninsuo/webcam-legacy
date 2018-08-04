@@ -20,7 +20,7 @@ class Camera extends BaseService
 
     public function __construct()
     {
-        date_default_timezone_set('UTC');
+        date_default_timezone_set($this->getParameter('timezone'));
     }
 
     public function getAvailableCameras()
@@ -103,7 +103,7 @@ class Camera extends BaseService
             $img, $ratioX * self::DEFAULT_TIME_SIZE, 0, $ratioX * self::DEFAULT_TIME_X, $ratioY * self::DEFAULT_TIME_Y,
             imagecolorallocate($img, 255, 255, 0),
             __DIR__ . '/../Resources/fonts/Lato/Lato-Regular.ttf',
-            date("d/m/Y H:i:s \U\T\C", filemtime($file))
+            date("d/m/Y H:i:s", filemtime($file))
         );
 
         if ($size === self::SIZE_SMALL) {

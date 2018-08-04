@@ -25,6 +25,9 @@ class ArchiveCommand extends BaseCommand
         $today = strtotime(date("Y-m-d 00:00:00", time())) - 1;
         $yesterday = ($today - 24 * 60 * 60 + 1);
 
+        // For file names, using UTC in order to avoid daylight saving time issues
+        date_default_timezone_set('UTC');
+
         // Browsing all webcams
         foreach ($this->get('app.camera')->getAvailableCameras() as $name) {
             $directory = realpath(sprintf('%s/%s', $this->getParameter('webcam_path'), $name));
