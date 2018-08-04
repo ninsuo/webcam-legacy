@@ -63,3 +63,4 @@ parameters:
 
     # Gr4bbr
     webcam_path: /Users/alain/webcam/
+    timezone: Europe/Paris

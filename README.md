@@ -34,12 +34,19 @@ php app/console user:list
 # enable user with id = 1
 php app/console user:enable 1
 
-# set user with id = 1 as admin
+# set user with id = 1 as admin (he can allow other users on the platform)
 php app/console user:admin 1
 ```
 
 Note that those commands are toggles, so running `php app/console user:admin 1` a second time will remove admin
 privileges for the given user.
+
+4) You can also cron the cleaning scripts located in /bin:
+
+```
+# webcams
+50 0 * * * /var/www/webcams/app/console cron:archive )
+```
 
 ## Development
 
