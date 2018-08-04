@@ -5,7 +5,7 @@ Webcam viewer
 
 Your camera should send a new picture in a directory of your server every
 second for the best live possible. Those pictures should have the read
-permission for www-data (easy, make sure they are `-rw-r--r--`).
+permission for www-data (easy, make sure they are `-rw-r--r--`), they should not be exposed though!
 
 ## Installation
 
