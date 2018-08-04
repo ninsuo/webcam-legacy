@@ -29,23 +29,7 @@ class HistoryController extends BaseController
     {
         $images  = $this->get('app.camera')->listImages($name);
         $filters = $this->createFilterForm($request, $images);
-
-        if ($filters->isValid()) {
-            $data = $filters->getData();
-
-            $images = array_filter($images, function ($value, $key) use ($data) {
-                if ($key % $data['step'] !== 0) {
-                    return false;
-                }
-                if ($data['from'] > $data['to'] && $value['time'] < $data['from'] && $value['time'] > $data['to']) {
-                    return false;
-                } elseif ($data['from'] < $data['to'] && ($value['time'] < $data['from'] || $value['time'] > $data['to'])) {
-                    return false;
-                }
-
-                return true;
-            }, ARRAY_FILTER_USE_BOTH);
-        }
+        $images  = $this->applyFiltersOnImages($images, $filters);
 
         return [
             'pager'   => $this->getPager($images),
@@ -68,6 +52,40 @@ class HistoryController extends BaseController
             'Pragma'           => 'no-cache',
             'Expires'          => '0',
         ]);
+    }
+
+    /**
+     * @Route("/details/{name}/{file}", name="details")
+     * @Template()
+     */
+    public function detailsAction(Request $request, $name, $file)
+    {
+        $images  = $this->get('app.camera')->listImages($name);
+        $filters = $this->createFilterForm($request, $images);
+        $images  = array_values($this->applyFiltersOnImages($images, $filters));
+
+        $previous = null;
+        $current = null;
+        $next = null;
+        foreach ($images as $key => $image) {
+            if ($image['file'] == $file) {
+                if ($key != 0) {
+                    $previous = $images[$key - 1];
+                }
+                $current = $images[$key];
+                if ($key + 1 != count($images)) {
+                    $next = $images[$key + 1];
+                }
+            }
+        }
+
+        return [
+            'name' => $name,
+            'filters' => $filters->createView(),
+            'previous' => $previous,
+            'current' => $current,
+            'next' => $next,
+        ];
     }
 
     private function createFilterForm(Request $request, $images): FormInterface
@@ -114,5 +132,27 @@ class HistoryController extends BaseController
             ])
             ->getForm()
             ->handleRequest($request);
+    }
+
+    private function applyFiltersOnImages($images, $filters)
+    {
+        if (!$filters->isSubmitted() || !$filters->isValid()) {
+            return $images;
+        }
+
+        $data = $filters->getData();
+
+        return array_filter($images, function ($value, $key) use ($data) {
+            if ($key % $data['step'] !== 0) {
+                return false;
+            }
+            if ($data['from'] > $data['to'] && $value['time'] < $data['from'] && $value['time'] > $data['to']) {
+                return false;
+            } elseif ($data['from'] < $data['to'] && ($value['time'] < $data['from'] || $value['time'] > $data['to'])) {
+                return false;
+            }
+
+            return true;
+        }, ARRAY_FILTER_USE_BOTH);
     }
 }

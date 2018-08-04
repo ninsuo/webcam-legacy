@@ -1,0 +1,61 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block title %}{{ name }}'s history{% endblock %}
+{% block body_title %}{% endblock %}
+
+{% block body %}
+
+    <div class="text-center">
+        <a href="{{ path('file', {name: name, file: current.file, size: constant('AppBundle\\Services\\Camera::SIZE_LARGE')}) }}" target="_blank">
+            <img src="{{ path('file', {name: name, file: current.file, size: constant('AppBundle\\Services\\Camera::SIZE_LARGE')}) }}" class="img-responsive"/>
+            <h3>{{ current.time|date('H:i:s') }}</h3>
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 text-center">
+            {% if previous %}
+                <a class="btn btn-lg btn-default" href="{{ path('details', {name: name, file: previous.file}|merge(app.request.query.all)) }}">
+                    Previous
+                    <br/>
+                    <img src="{{ path('file', {name: name, file: previous.file, size: constant('AppBundle\\Services\\Camera::SIZE_SMALL')}) }}" class="img-responsive" style="max-width:200px;"/>
+                </a>
+            {% endif %}
+        </div>
+        <div class="col-md-4 text-center">
+            <div>Filters</div>
+            {{ form_start(filters) }}
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>From</td>
+                        <td>{{ form_widget(filters.from) }}</td>
+                    </tr>
+                    <tr>
+                        <td>To</td>
+                        <td>{{ form_widget(filters.to) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Step</td>
+                        <td>{{ form_widget(filters.step) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            {{ form_end(filters) }}
+        </div>
+        <div class="col-md-4 text-center">
+            {% if next %}
+                <a class="btn btn-lg btn-default" href="{{ path('details', {name: name, file: next.file}|merge(app.request.query.all)) }}">
+                    Next
+                    <br/>
+                    <img src="{{ path('file', {name: name, file: next.file, size: constant('AppBundle\\Services\\Camera::SIZE_SMALL')}) }}" class="img-responsive" style="max-width:200px;"/>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block script %}
+{% endblock %}
