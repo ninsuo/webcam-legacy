@@ -8,7 +8,7 @@
     <div class="text-center">
         <a href="{{ path('file', {name: name, file: current.file, size: constant('AppBundle\\Services\\Camera::SIZE_LARGE')}) }}" target="_blank">
             <img src="{{ path('file', {name: name, file: current.file, size: constant('AppBundle\\Services\\Camera::SIZE_LARGE')}) }}" class="img-responsive"/>
-            <h3>{{ current.time|date('H:i:s') }}</h3>
+            <h3>{{ (current.date + current.time)|date('H:i:s') }}</h3>
         </a>
     </div>
 

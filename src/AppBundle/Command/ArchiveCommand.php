@@ -79,12 +79,6 @@ class ArchiveCommand extends BaseCommand
 
             exec(sprintf('tar czf %s.tar.gz --atime-preserve %s', basename($archive), basename($archive)));
             exec(sprintf("rm -rf %s", $archive));
-
-            // Remove yesterday's images
-            foreach ($toArchive as $file)
-            {
-                unlink($file);
-            }
         }
 
         return 0;

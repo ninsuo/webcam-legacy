@@ -187,16 +187,19 @@ class Camera extends BaseService
             throw new NotFoundHttpException();
         }
 
+        $tz = date_default_timezone_get();
+        date_default_timezone_set('UTC');
         $data = [];
         foreach (array_map('basename', glob(sprintf('%s/*.jpg', $dir))) as $file) {
             $date = filemtime(sprintf('%s/%s', $dir, $file));
 
             $data[] = [
                 'file' => $file,
-                'date' => $date,
+                'date' => strtotime(date('Y-m-d 00:00:00', $date)),
                 'time' => $date % 86400,
             ];
         }
+        date_default_timezone_set($tz);
 
         usort($data, function ($a, $b) {
             return $a['date'] > $b['date'] ? 1 : -1;

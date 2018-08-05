@@ -50,7 +50,7 @@
                     <img src="{{ path('file', {name: name, file: data.file, size: constant('AppBundle\\Services\\Camera::SIZE_SMALL')}) }}" class="img-responsive"/>
                 </a>
                 <label for="result-{{ key }}">
-                    {{ data.time|date('H:i:s') }}
+                    {{ (data.date + data.time)|date('H:i:s') }}
                 </label>
                 <input data-file="{{ data.file }}" type="checkbox" id="result-{{ key }}" class="downloadable" />
             </div>
