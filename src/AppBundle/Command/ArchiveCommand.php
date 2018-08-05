@@ -25,7 +25,7 @@ class ArchiveCommand extends BaseCommand
         // Only getting timestamp for yesterday's images (Paris time)
         date_default_timezone_set($this->getParameter('timezone'));
         $today = strtotime(date("Y-m-d 00:00:00", time())) - 1;
-        $yesterday = ($today - 24 * 60 * 60 + 1);
+        $yesterday = ($today - 24 * 60 * 60);
 
         // For file names, using UTC in order to avoid daylight saving time issues
         date_default_timezone_set('UTC');
@@ -77,7 +77,7 @@ class ArchiveCommand extends BaseCommand
                 exec(sprintf('mv %s %s/%s', $source, $archive, $target));
             }
 
-            exec(sprintf('tar czf %s.tgz --atime-preserve %s', basename($archive), basename($archive)));
+            exec(sprintf('tar czf %s.tar.gz --atime-preserve %s', basename($archive), basename($archive)));
             exec(sprintf("rm -rf %s", $archive));
 
             // Remove yesterday's images
