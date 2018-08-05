@@ -4,6 +4,7 @@ namespace AppBundle\Command;
 
 use BaseBundle\Base\BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ArchiveCommand extends BaseCommand
@@ -15,6 +16,7 @@ class ArchiveCommand extends BaseCommand
         $this
             ->setName('cron:archive')
             ->setDescription('Run the daily archivage')
+            ->addOption('camera', null, InputOption::VALUE_REQUIRED, 'Only the specified camera')
         ;
     }
 
@@ -28,8 +30,17 @@ class ArchiveCommand extends BaseCommand
         // For file names, using UTC in order to avoid daylight saving time issues
         date_default_timezone_set('UTC');
 
+        $camera = $input->getOption('camera', null);
+        if (!$this->get('app.camera')->isCamera($camera)) {
+            throw new \RuntimeException(sprintf('Camera %s not found.', $camera));
+        }
+
         // Browsing all webcams
         foreach ($this->get('app.camera')->getAvailableCameras() as $name) {
+            if (!is_null($camera) && $camera !== $name) {
+                continue ;
+            }
+
             $directory = realpath(sprintf('%s/%s', $this->getParameter('webcam_path'), $name));
 
             if (!$directory) {

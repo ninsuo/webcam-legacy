@@ -138,7 +138,7 @@ class HistoryController extends BaseController
             ->setMethod('GET')
             ->add('from', TimeType::class, [
                 'input'          => 'timestamp',
-                'view_timezone'  => 'UTC',
+                'view_timezone'  => $this->getParameter('timezone'),
                 'with_seconds'   => true,
                 'widget'         => 'single_text',
                 'error_bubbling' => true,
@@ -149,7 +149,7 @@ class HistoryController extends BaseController
             ])
             ->add('to', TimeType::class, [
                 'input'          => 'timestamp',
-                'view_timezone'  => 'UTC',
+                'view_timezone'  => $this->getParameter('timezone'),
                 'with_seconds'   => true,
                 'widget'         => 'single_text',
                 'error_bubbling' => true,

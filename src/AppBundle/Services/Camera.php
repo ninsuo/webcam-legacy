@@ -36,6 +36,11 @@ class Camera extends BaseService
         return $cameras;
     }
 
+    public function isCamera($name)
+    {
+        return in_array($name, $this->getAvailableCameras());
+    }
+
     public function getImageByNumber($name, $value, $size)
     {
         $dir = $this->checkDirectory($name);
