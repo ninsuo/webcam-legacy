@@ -31,7 +31,7 @@ class ArchiveCommand extends BaseCommand
         date_default_timezone_set('UTC');
 
         $camera = $input->getOption('camera', null);
-        if (!$this->get('app.camera')->isCamera($camera)) {
+        if ($camera && !$this->get('app.camera')->isCamera($camera)) {
             throw new \RuntimeException(sprintf('Camera %s not found.', $camera));
         }
 
@@ -74,11 +74,11 @@ class ArchiveCommand extends BaseCommand
             {
                 $source = escapeshellarg(basename($file));
                 $target = sprintf('%s.%s', date('Y-m-d_H-i-s', filemtime($file)), pathinfo($file, PATHINFO_EXTENSION));
-                exec('mv %s %s/%s', $source, $archive, $target);
+                exec(sprintf('mv %s %s/%s', $source, $archive, $target));
             }
 
-            exec('tar czf %s.tgz --atime-preserve %s', basename($archive), basename($archive));
-            exec("rm -rf %s", $archive);
+            exec(sprintf('tar czf %s.tgz --atime-preserve %s', basename($archive), basename($archive)));
+            exec(sprintf("rm -rf %s", $archive));
 
             // Remove yesterday's images
             foreach ($toArchive as $file)
