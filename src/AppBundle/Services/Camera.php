@@ -199,7 +199,7 @@ class Camera extends BaseService
         }
 
         usort($data, function ($a, $b) {
-            return $a['date'] > $b['date'] ? 1 : -1;
+            return $a['date'] + $a['time'] > $b['date'] + $b['time'] ? 1 : -1;
         });
 
         return $data;
