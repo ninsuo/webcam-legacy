@@ -100,6 +100,8 @@ class HistoryController extends BaseController
     {
         $this->watch($name, Camera::SIZE_LARGE);
 
+        date_default_timezone_set($this->getParameter('timezone'));
+
         $files = json_decode($request->request->get('files'), true);
         if ($files === false) {
             throw $this->createNotFoundException();
@@ -112,6 +114,8 @@ class HistoryController extends BaseController
                 continue ;
             }
 
+            $gmt = intval(substr(date('O', filemtime($path)), 0, -2));
+            $file = sprintf('%s.GMT%s.%s', date('Y-m-d.H-i-s', filemtime($path)), $gmt, pathinfo($path, PATHINFO_EXTENSION));
             $zip->addFile($path, $file);
         }
 

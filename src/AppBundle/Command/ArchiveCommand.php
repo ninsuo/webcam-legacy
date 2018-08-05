@@ -65,7 +65,7 @@ class ArchiveCommand extends BaseCommand
             }
 
             // Rename and archive yesterday's images
-            $archive = sprintf('%s/webcam_%s', $directory, date('Y-m-d', $yesterday));
+            $archive = sprintf('%s/webcam_%s', $directory, date('Y-m-d', $yesterday + 1));
             mkdir($archive);
             foreach ($toArchive as $file)
             {
@@ -75,7 +75,7 @@ class ArchiveCommand extends BaseCommand
                     $gmt = sprintf('+%d', $gmt);
                 }
 
-                $target = sprintf('%s.GMT%s.%s', date('Y-m-d_H-i-s', filemtime($file)), $gmt, pathinfo($file, PATHINFO_EXTENSION));
+                $target = sprintf('%s.GMT%s.%s', date('Y-m-d.H-i-s', filemtime($file)), $gmt, pathinfo($file, PATHINFO_EXTENSION));
                 exec(sprintf('mv %s %s/%s', $source, $archive, $target));
             }
 
