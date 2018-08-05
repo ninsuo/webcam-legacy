@@ -27,9 +27,6 @@ class ArchiveCommand extends BaseCommand
         $today = strtotime(date("Y-m-d 00:00:00", time())) - 1;
         $yesterday = ($today - 24 * 60 * 60);
 
-        // For file names, using UTC in order to avoid daylight saving time issues
-        date_default_timezone_set('UTC');
-
         $camera = $input->getOption('camera', null);
         if ($camera && !$this->get('app.camera')->isCamera($camera)) {
             throw new \RuntimeException(sprintf('Camera %s not found.', $camera));
@@ -73,7 +70,12 @@ class ArchiveCommand extends BaseCommand
             foreach ($toArchive as $file)
             {
                 $source = escapeshellarg(basename($file));
-                $target = sprintf('%s.%s', date('Y-m-d_H-i-s', filemtime($file)), pathinfo($file, PATHINFO_EXTENSION));
+                $gmt = intval(substr(date('O'), 0, -2));
+                if ($gmt >= 0) {
+                    $gmt = sprintf('+%d', $gmt);
+                }
+
+                $target = sprintf('%s.GMT%s.%s', date('Y-m-d_H-i-s', filemtime($file)), $gmt, pathinfo($file, PATHINFO_EXTENSION));
                 exec(sprintf('mv %s %s/%s', $source, $archive, $target));
             }
 
