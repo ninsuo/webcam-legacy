@@ -15,12 +15,12 @@ class Camera extends BaseService
     const DEFAULT_WIDTH     = 1280;
     const DEFAULT_HEIGHT    = 720;
     const DEFAULT_TIME_SIZE = 28;
-    const DEFAULT_TIME_X    = 910;
+    const DEFAULT_TIME_X    = 835;
     const DEFAULT_TIME_Y    = 700;
 
     public function setRightTimezone()
     {
-        date_default_timezone_set($this->getParameter('timezone'));
+        date_default_timezone_set('UTC');
     }
 
     public function getAvailableCameras()
@@ -36,9 +36,9 @@ class Camera extends BaseService
         return $cameras;
     }
 
-    public function isCamera($name)
+    public function isCameraOrNull($name)
     {
-        return in_array($name, $this->getAvailableCameras());
+        return !$name || in_array($name, $this->getAvailableCameras());
     }
 
     public function getImageByNumber($name, $value, $size)
@@ -108,7 +108,7 @@ class Camera extends BaseService
             $img, $ratioX * self::DEFAULT_TIME_SIZE, 0, $ratioX * self::DEFAULT_TIME_X, $ratioY * self::DEFAULT_TIME_Y,
             imagecolorallocate($img, 255, 255, 0),
             __DIR__ . '/../Resources/fonts/Lato/Lato-Regular.ttf',
-            date("d/m/Y H:i:s", filemtime($file))
+            date("d/m/Y H:i:s \U\T\C", filemtime($file))
         );
 
         if ($size === self::SIZE_SMALL) {
@@ -187,8 +187,6 @@ class Camera extends BaseService
             throw new NotFoundHttpException();
         }
 
-        $tz = date_default_timezone_get();
-        date_default_timezone_set('UTC');
         $data = [];
         foreach (array_map('basename', glob(sprintf('%s/*.jpg', $dir))) as $file) {
             $date = filemtime(sprintf('%s/%s', $dir, $file));
@@ -199,7 +197,6 @@ class Camera extends BaseService
                 'time' => $date % 86400,
             ];
         }
-        date_default_timezone_set($tz);
 
         usort($data, function ($a, $b) {
             return $a['date'] > $b['date'] ? 1 : -1;

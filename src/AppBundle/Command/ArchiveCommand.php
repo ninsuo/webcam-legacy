@@ -22,15 +22,16 @@ class ArchiveCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        // Initialize the camera service first in order to execute its constructor
+        $camera = $input->getOption('camera', null);
+        if (!$this->get('app.camera')->isCameraOrNull($camera)) {
+            throw new \RuntimeException(sprintf('Camera %s not found.', $camera));
+        }
+
         // Only getting timestamp for yesterday's images (Paris time)
         date_default_timezone_set($this->getParameter('timezone'));
         $today = strtotime(date("Y-m-d 00:00:00", time())) - 1;
         $yesterday = ($today - 24 * 60 * 60);
-
-        $camera = $input->getOption('camera', null);
-        if ($camera && !$this->get('app.camera')->isCamera($camera)) {
-            throw new \RuntimeException(sprintf('Camera %s not found.', $camera));
-        }
 
         // Browsing all webcams
         foreach ($this->get('app.camera')->getAvailableCameras() as $name) {

@@ -100,8 +100,6 @@ class HistoryController extends BaseController
     {
         $this->watch($name, Camera::SIZE_LARGE);
 
-        date_default_timezone_set($this->getParameter('timezone'));
-
         $files = json_decode($request->request->get('files'), true);
         if ($files === false) {
             throw $this->createNotFoundException();
@@ -114,8 +112,7 @@ class HistoryController extends BaseController
                 continue ;
             }
 
-            $gmt = intval(substr(date('O', filemtime($path)), 0, -2));
-            $file = sprintf('%s.GMT%s.%s', date('Y-m-d.H-i-s', filemtime($path)), $gmt, pathinfo($path, PATHINFO_EXTENSION));
+            $file = sprintf('%s.UTC.%s', date('Y-m-d.H-i-s', filemtime($path)), pathinfo($path, PATHINFO_EXTENSION));
             $zip->addFile($path, $file);
         }
 
@@ -142,7 +139,7 @@ class HistoryController extends BaseController
             ->setMethod('GET')
             ->add('from', TimeType::class, [
                 'input'          => 'timestamp',
-                'view_timezone'  => $this->getParameter('timezone'),
+                'view_timezone'  => 'UTC',
                 'with_seconds'   => true,
                 'widget'         => 'single_text',
                 'error_bubbling' => true,
@@ -153,7 +150,7 @@ class HistoryController extends BaseController
             ])
             ->add('to', TimeType::class, [
                 'input'          => 'timestamp',
-                'view_timezone'  => $this->getParameter('timezone'),
+                'view_timezone'  => 'UTC',
                 'with_seconds'   => true,
                 'widget'         => 'single_text',
                 'error_bubbling' => true,
