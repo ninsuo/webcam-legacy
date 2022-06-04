@@ -183,8 +183,6 @@ abstract class BaseController extends Controller
             throw $this->createNotFoundException();
         }
 
-        if ($size === Camera::SIZE_LARGE) {
-            $this->getManager(Watcher::class)->save($this->getUser(), $name);
-        }
+        $this->getManager(Watcher::class)->save($this->getUser(), $name);
     }
 }

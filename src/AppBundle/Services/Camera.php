@@ -48,9 +48,9 @@ class Camera extends BaseService
             return $this->createErrorImage();
         }
 
-        $count = trim(exec(sprintf('ls -t %s|grep -i jpg|wc -l', $dir)));
+        $count = trim(exec(sprintf('ls -tR %s|grep -i jpg|wc -l', $dir)));
         $no    = intval($count * $value / self::SLIDER) + 1;
-        $exec  = sprintf("ls -tr %s|grep -i jpg|cat -n|egrep '^[ ]+%d\t'", $dir, $no);
+        $exec  = sprintf("ls -trR %s|grep -i jpg|cat -n|egrep '^[ ]+%d\t'", $dir, $no);
         $file  = trim(exec($exec));
 
         if (!$file) {
@@ -81,7 +81,7 @@ class Camera extends BaseService
             return $this->createErrorImage();
         }
 
-        $file = sprintf('%s/%s', $dir, exec(sprintf('ls -t %s/|grep -i jpg|head -2|tac|head -1', $dir)));
+        $file = sprintf('%s/%s', $dir, exec(sprintf('ls -tR %s/|grep -i jpg|head -2|tac|head -1', $dir)));
         if (!is_readable($file)) {
             return $this->createErrorImage();
         }
