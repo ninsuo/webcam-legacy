@@ -82,6 +82,8 @@ class Camera extends BaseService
         }
 
         $file = sprintf('%s/%s', $dir, exec(sprintf('ls -tR %s/|grep -i jpg|head -2|tac|head -1', $dir)));
+        $file = exec(sprintf('find %s|grep %s', $dir, $file));
+
         if (!is_readable($file)) {
             return $this->createErrorImage();
         }
