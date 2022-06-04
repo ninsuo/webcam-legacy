@@ -52,6 +52,7 @@ class Camera extends BaseService
         $no    = intval($count * $value / self::SLIDER) + 1;
         $exec  = sprintf("ls -trR %s|grep -i jpg|cat -n|egrep '^[ ]+%d\t'", $dir, $no);
         $file  = trim(exec($exec));
+        $file = exec(sprintf('find %s|grep %s', $dir, $file));
 
         if (!$file) {
             return $this->createErrorImage();
