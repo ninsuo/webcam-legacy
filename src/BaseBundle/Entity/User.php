@@ -48,8 +48,7 @@ class User implements UserInterface, EquatableInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="nickname", type="string", length=191)
-     * @Assert\NotBlank()
+     * @ORM\Column(name="nickname", type="string", length=191, nullable=true)
      */
     protected $nickname;
 

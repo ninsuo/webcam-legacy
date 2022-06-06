@@ -10,7 +10,7 @@ parameters:
 
     # Database (just put pdo_sqlite to switch)
     database_driver:   pdo_mysql
-    database_host:     127.0.0.1
+    database_host:     mariadb
     database_port:     ~
     database_name:     fuz
     database_user:     root

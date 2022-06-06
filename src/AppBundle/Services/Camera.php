@@ -98,28 +98,28 @@ class Camera extends BaseService
             return $this->createErrorImage();
         }
 
-        $img = @imagecreatefromjpeg($file);
+        $img = @\imagecreatefromjpeg($file);
 
         if (!$img) {
             return $this->createErrorImage();
         }
 
-        $ratioX = imagesx($img) / self::DEFAULT_WIDTH;
-        $ratioY = imagesy($img) / self::DEFAULT_HEIGHT;
+        $ratioX = \imagesx($img) / self::DEFAULT_WIDTH;
+        $ratioY = \imagesy($img) / self::DEFAULT_HEIGHT;
 
-        imagettftext(
+        \imagettftext(
             $img, $ratioX * self::DEFAULT_TIME_SIZE, 0, $ratioX * self::DEFAULT_TIME_X, $ratioY * self::DEFAULT_TIME_Y,
-            imagecolorallocate($img, 255, 255, 0),
+            \imagecolorallocate($img, 255, 255, 0),
             __DIR__ . '/../Resources/fonts/Lato/Lato-Regular.ttf',
             date("d/m/Y H:i:s \U\T\C", filemtime($file))
         );
 
         if ($size === self::SIZE_SMALL) {
-            $img = imagescale($img, imagesx($img) / 2, imagesy($img) / 2);
+            $img = \imagescale($img, \imagesx($img) / 2, \imagesy($img) / 2);
         }
 
         ob_start();
-        imagejpeg($img);
+        \imagejpeg($img);
 
         return ob_get_clean();
     }
@@ -229,5 +229,21 @@ class Camera extends BaseService
         imagejpeg($img);
 
         return ob_get_clean();
+    }
+
+    private function getDirContents($dir, &$results = [])
+    {
+        $files = scandir($dir);
+
+        foreach ($files as $key => $value) {
+            $path = realpath($dir.DIRECTORY_SEPARATOR.$value);
+            if (!is_dir($path)) {
+                $results[] = $path;
+            } elseif ($value != "." && $value != "..") {
+                $this->getDirContents($path, $results);
+            }
+        }
+
+        return $results;
     }
 }
