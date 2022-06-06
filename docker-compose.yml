@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  mariadb:
+    build:
+      context: ./docker/mariadb
+    environment:
+      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=yes
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/mariadb/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./docker/mariadb/data:/var/lib/mysql
+
+  php:
+    build:
+      context: ./docker/php-fpm
+    depends_on:
+      - mariadb
+    volumes:
+      - .:/var/www
+      - /Users/ninsuo/Desktop/webcam:/data
+
+  nginx:
+    build:
+      context: ./docker/nginx
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/sites/:/etc/nginx/sites-available
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d
+      - ./docker/nginx/logs:/var/log/nginx
+    depends_on:
+      - php
+    ports:
+      - "80:80"
+      - "443:443"
+
