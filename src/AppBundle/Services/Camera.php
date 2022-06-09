@@ -81,14 +81,12 @@ class Camera extends BaseService
     public function getLastImage($name, $size)
     {
         $dir = $this->checkDirectory($name);
-
         if (is_null($dir)) {
             return $this->createErrorImage();
         }
 
-        $images = $this->listImages($name);
-        $last = end($images);
-        $file = $last['path'];
+        $file = exec(sprintf('ls -tR %s/|grep -i jpg|head -2|tac|head -1', $dir));
+        $file = exec(sprintf('find %s|grep %s', $dir, $file));
 
         if (!is_readable($file)) {
             return $this->createErrorImage();
