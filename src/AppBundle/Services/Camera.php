@@ -51,13 +51,14 @@ class Camera extends BaseService
 
         $images = $this->listImages($name);
         $no    = intval(count($images) * $value / self::SLIDER) + 1;
+
         $file = $images[$no]['path'] ?? null;
 
         if (!$file) {
             return $this->createErrorImage();
         }
 
-        return $this->timestampize(sprintf('%s/%s', $dir, substr($file, strpos($file, "\t") + 1)), $size);
+        return $this->timestampize($file, $size);
     }
 
     public function getImageByFilename($name, $file, $size)
@@ -74,7 +75,7 @@ class Camera extends BaseService
             return $this->createErrorImage();
         }
 
-        return $this->timestampize(sprintf('%s/%s', $dir, $file), $size);
+        return $this->timestampize($file, $size);
     }
 
     public function getLastImage($name, $size)
