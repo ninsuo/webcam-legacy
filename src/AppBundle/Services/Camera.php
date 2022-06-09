@@ -44,15 +44,14 @@ class Camera extends BaseService
     public function getImageByNumber($name, $value, $size)
     {
         $dir = $this->checkDirectory($name);
+
         if (is_null($dir)) {
             return $this->createErrorImage();
         }
 
-        $count = trim(exec(sprintf('ls -tR %s|grep -i jpg|wc -l', $dir)));
-        $no    = intval($count * $value / self::SLIDER) + 1;
-        $exec  = sprintf("ls -trR %s|grep -i jpg|cat -n|egrep '^[ ]+%d\t'", $dir, $no);
-        $file  = trim(exec($exec));
-        $file = exec(sprintf('find %s|grep %s', $dir, $file));
+        $images = $this->listImages($name);
+        $no    = intval(count($images) * $value / self::SLIDER) + 1;
+        $file = $images[$no]['path'] ?? null;
 
         if (!$file) {
             return $this->createErrorImage();
@@ -64,9 +63,12 @@ class Camera extends BaseService
     public function getImageByFilename($name, $file, $size)
     {
         $dir = $this->checkDirectory($name);
+
         if (is_null($dir)) {
             return $this->createErrorImage();
         }
+
+        $file = str_replace('./', '', $file);
 
         if (!preg_match('/^[0-9a-zA-Z\.\-_\(\)]+\.jpg$/', $file)) {
             return $this->createErrorImage();
@@ -78,12 +80,14 @@ class Camera extends BaseService
     public function getLastImage($name, $size)
     {
         $dir = $this->checkDirectory($name);
+
         if (is_null($dir)) {
             return $this->createErrorImage();
         }
 
-        $file = exec(sprintf('ls -tR %s/|grep -i jpg|head -2|tac|head -1', $dir));
-        $file = exec(sprintf('find %s|grep %s', $dir, $file));
+        $images = $this->listImages($name);
+        $last = end($images);
+        $file = $last['path'];
 
         if (!is_readable($file)) {
             return $this->createErrorImage();
@@ -166,6 +170,7 @@ class Camera extends BaseService
         $closest     = null;
         $closestTime = 0xFFFFFFFF;
         $images      = $this->listImages($name);
+
         foreach ($images as $image) {
             if (abs($image['time'] - $time) < $closestTime) {
                 $closest     = $image;
@@ -191,11 +196,12 @@ class Camera extends BaseService
         }
 
         $data = [];
-        foreach (array_map('basename', glob(sprintf('%s/*.jpg', $dir))) as $file) {
-            $date = filemtime(sprintf('%s/%s', $dir, $file));
+        foreach ($this->rsearch($dir, '/.*\.jpg$/') as $file) {
+            $date = filemtime($file);
 
             $data[] = [
-                'file' => $file,
+                'path' => $file,
+                'file' => basename($file),
                 'date' => strtotime(date('Y-m-d 00:00:00', $date)),
                 'time' => $date % 86400,
             ];
@@ -231,19 +237,17 @@ class Camera extends BaseService
         return ob_get_clean();
     }
 
-    private function getDirContents($dir, &$results = [])
+    private function rsearch($folder, $regPattern)
     {
-        $files = scandir($dir);
+        $dir = new \RecursiveDirectoryIterator($folder);
+        $ite = new \RecursiveIteratorIterator($dir);
+        $files = new \RegexIterator($ite, $regPattern, \RegexIterator::GET_MATCH);
 
-        foreach ($files as $key => $value) {
-            $path = realpath($dir.DIRECTORY_SEPARATOR.$value);
-            if (!is_dir($path)) {
-                $results[] = $path;
-            } elseif ($value != "." && $value != "..") {
-                $this->getDirContents($path, $results);
-            }
+        $fileList = [];
+        foreach ($files as $file) {
+            $fileList = array_merge($fileList, $file);
         }
 
-        return $results;
+        return $fileList;
     }
 }

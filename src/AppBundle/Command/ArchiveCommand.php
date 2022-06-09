@@ -51,7 +51,7 @@ class ArchiveCommand extends BaseCommand
             exec(sprintf('find %s/*.tar.gz -mtime +30 -exec rm {} \; 2>&1 > /dev/null', $directory));
 
             // Recovering all yesterday's images
-            $files = glob(sprintf('%s/*.jpg', $directory));
+            $files = array_column($this->get('app.camera')->rsearch($directory, '/.*\.jpg$/'), 'path');
             $toArchive = array();
             foreach ($files as $file)
             {
