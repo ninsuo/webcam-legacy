@@ -239,7 +239,7 @@ class Camera extends BaseService
         return ob_get_clean();
     }
 
-    private function rsearch($folder, $regPattern)
+    public function rsearch($folder, $regPattern)
     {
         $dir = new \RecursiveDirectoryIterator($folder);
         $ite = new \RecursiveIteratorIterator($dir);
