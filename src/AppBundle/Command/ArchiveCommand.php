@@ -50,38 +50,13 @@ class ArchiveCommand extends BaseCommand
             // Remove archives older than 30 days
             exec(sprintf('find %s/*.tar.gz -mtime +30 -exec rm {} \; 2>&1 > /dev/null', $directory));
 
-            // Recovering all yesterday's images
-            $files = array_column($this->get('app.camera')->rsearch($directory, '/.*\.jpg$/'), 'path');
-            $toArchive = array();
-            foreach ($files as $file)
-            {
-                $stat = stat($file);
-                if (($stat['mtime'] >= $yesterday) && ($stat['mtime'] <= $today))
-                {
-                    $toArchive[] = $file;
-                }
-            }
-            if (count($toArchive) == 0) {
-                continue ;
-            }
-
-            // Rename and archive yesterday's images
+            $from = date('Y-m-d H:i:s', $yesterday);
+            $to = date('Y-m-d H:i:s', $today);
             $archive = sprintf('%s/webcam_%s', $directory, date('Y-m-d', $yesterday + 1));
-            mkdir($archive);
-            foreach ($toArchive as $file)
-            {
-                $source = escapeshellarg(basename($file));
-                $gmt = intval(substr(date('O'), 0, -2));
-                if ($gmt >= 0) {
-                    $gmt = sprintf('+%d', $gmt);
-                }
 
-                $target = sprintf('%s.GMT%s.%s', date('Y-m-d.H-i-s', filemtime($file)), $gmt, pathinfo($file, PATHINFO_EXTENSION));
-                exec(sprintf('mv %s %s/%s', $source, $archive, $target));
-            }
+            exec(sprintf('find . -newermt "%s" -not -newermt "%s" -regex ".*\.\(jpg\|png\|jpeg\)" -print0 | tar czf %s.tar.gz --atime-preserve --null -T -', $from, $to, basename($archive)));
 
-            exec(sprintf('tar czf %s.tar.gz --atime-preserve %s', basename($archive), basename($archive)));
-            exec(sprintf("rm -rf %s", $archive));
+            exec(sprintf('find . -newermt "%s" -not -newermt "%s" -regex ".*\.\(jpg\|png\|jpeg\)" -exec rm -f {} \;', $from, $to));
         }
 
         return 0;
