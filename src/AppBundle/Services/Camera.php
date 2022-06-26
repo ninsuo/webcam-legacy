@@ -12,8 +12,8 @@ class Camera extends BaseService
     const SIZE_SMALL = 'small';
     const SIZE_LARGE = 'large';
 
-    const DEFAULT_WIDTH     = 1280;
-    const DEFAULT_HEIGHT    = 720;
+    const DEFAULT_WIDTH     = 640;
+    const DEFAULT_HEIGHT    = 420;
     const DEFAULT_TIME_SIZE = 28;
     const DEFAULT_TIME_X    = 835;
     const DEFAULT_TIME_Y    = 700;
@@ -103,8 +103,6 @@ class Camera extends BaseService
         if (!$file || !is_file($file) || !is_readable($file)) {
             return $this->createErrorImage();
         }
-
-        return file_get_contents($file);
 
         $img = @\imagecreatefromjpeg($file);
 
