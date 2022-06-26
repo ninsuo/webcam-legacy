@@ -104,6 +104,8 @@ class Camera extends BaseService
             return $this->createErrorImage();
         }
 
+        return file_get_contents($file);
+
         $img = @\imagecreatefromjpeg($file);
 
         if (!$img) {
